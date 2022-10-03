@@ -218,6 +218,11 @@ function renderPointList() {
 			LAST_MOUSE_POINT.y = this.y;
 			renderCanvas();
 		}.bind(point));
+		pointEle.addEventListener("mouseleave", function(event){
+			LAST_MOUSE_POINT.x = -1;
+			LAST_MOUSE_POINT.y = -1;
+			renderCanvas();
+		}.bind(point));
 
 		hex.addEventListener("input", function(event){
 			if(6 < event.target.value.length) event.target.value = event.target.value.substring(0, 6);
