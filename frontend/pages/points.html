@@ -9,20 +9,28 @@
 		<style>
 			body {
 				background: #000;
-			}
-			#canvas {
-				background: #111;
+				color: #fff;
+				font-family: Helvetica, Arial, sans-serif;
 			}
 			#container {
 				padding: 20px;
 				display: flex;
 				justify-content: center;
 			}
+
+
+			#mousePos {
+				padding-bottom: 10px;
+			}
+			#canvas {
+				background: #111;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="container">
 			<div id="wrapper">
+				<div id="mousePos">0, 0</div>
 				<canvas id="canvas"></canvas>
 			</div>
 		</div>
