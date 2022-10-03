@@ -151,14 +151,17 @@ function deletePoint(coord){
 	}
 	return false;
 }
+
+let pointIndex = 0;
 function createPoint(coord, hex = "ffffff") {
 	if(deletePoint(coord)) return;
 	points.push({
-		id: new Date().getTime(),
+		id: new Date().getTime() + "|" + pointIndex,
 		hex: hex,
 		alpha: "ff",
 		...coord
 	});
+	pointIndex += 1;
 	renderPointList();
 }
 function movePoint(pointRef, direction) {
@@ -169,7 +172,6 @@ function movePoint(pointRef, direction) {
 	let index = 0;
 	for (let a = 0; a < points.length; a++) {
 		if (points[a].id === pointRef.id) {
-
 			// Check if desired position is legal
 			const newIndex = a + direction;
 			if (0 <= newIndex && newIndex < points.length) {
