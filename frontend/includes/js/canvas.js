@@ -129,7 +129,7 @@ function renderCanvas(event, left = false) {
 
 
 // Points rendering
-const points = [];
+let points = [];
 function pointExists(coord) {
 	let matched = false;
 	for (const point of points) {
@@ -291,9 +291,10 @@ function encodeURI(){
 	const params = new URLSearchParams(location.search);
 	params.set('points', pointString);
 	params.toString(); // => points=ffffff|1|2
-	window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
+	window.history.pushState({}, '', `${location.pathname}?${params.toString()}`);
 }
 function loadURI(){
+	points = [];
 	const savedPointInfo = new URLSearchParams(location.search).get("points");
 	if(savedPointInfo != null){
 		const savedPoints = savedPointInfo.split(",");
@@ -308,4 +309,11 @@ function loadURI(){
 		}
 	}
 }
+
+window.addEventListener('popstate', (event) => {
+	loadURI();
+	renderCanvas();
+});
+
+
 loadURI();
