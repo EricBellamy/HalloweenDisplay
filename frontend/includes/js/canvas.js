@@ -1,13 +1,22 @@
+const maxCanvasFps = 10;
+const gridLineSpacing = 10;
+const canvasResolution = 300;
+
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 const mousePos = document.querySelector("#mousePos");
+const rightColumn = document.querySelector("#right");
 
 
-const canvasPadding = 20;
-const canvasResolution = 300;
+// Bounds
+const rightColumnBounds = rightColumn.getBoundingClientRect();
+
+
+// Initialize the canvas
+const canvasPadding = parseInt(getComputedStyle(document.querySelector("#container")).padding);
 const scale = Math.min(
-	Math.floor((window.innerWidth - canvasPadding) / 300),
-	Math.floor((window.innerHeight - canvasPadding) / 300)
+	Math.floor((window.innerWidth - canvasPadding - rightColumnBounds.width) / canvasResolution),
+	Math.floor((window.innerHeight - canvasPadding) / canvasResolution)
 );
 const canvasSize = canvasResolution * scale;
 
@@ -16,6 +25,8 @@ canvas.style.width = `${canvasSize}px`;
 canvas.height = canvasSize;
 canvas.style.height = `${canvasSize}px`;
 
+
+// Rendering functions
 let CURRENT_COLOR = "";
 function drawLine(startX, startY, endX, endY, color){
 	if(CURRENT_COLOR != color) context.strokeStyle = `#${color}`;
@@ -25,13 +36,13 @@ function drawLine(startX, startY, endX, endY, color){
 	context.stroke();
 }
 function drawGridLines(){
-	for(let a = 0; a < 31; a++){
-		drawLine(a * 10, 0, a * 10, 300, "2a2a2a");
-		drawLine(0, a * 10, 300, a * 10, "2a2a2a");
+	const limit = canvasResolution / gridLineSpacing;
+	for(let a = 0; a <= limit; a++){
+		drawLine(a * gridLineSpacing, 0, a * gridLineSpacing, canvasResolution, "2a2a2a");
+		drawLine(0, a * gridLineSpacing, canvasResolution, a * gridLineSpacing, "2a2a2a");
 	}
 }
 
-const maxCanvasFps = 10;
 const canvasDelayMs = Math.floor(1000 / maxCanvasFps);
 const debouncedRenderCanvas = tired.debounce(renderCanvas, canvasDelayMs, {
 	maxWait: canvasDelayMs

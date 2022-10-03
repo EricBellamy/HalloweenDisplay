@@ -19,19 +19,29 @@
 			}
 
 
+			/* Left Column */
 			#mousePos {
 				padding-bottom: 10px;
 			}
 			#canvas {
 				background: #111;
 			}
+
+
+			/* Right column */
+			#right {
+				padding-left: 40px;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="container">
-			<div id="wrapper">
+			<div id="left">
 				<div id="mousePos">0, 0</div>
 				<canvas id="canvas"></canvas>
+			</div>
+			<div id="right">
+				Placeholder
 			</div>
 		</div>
 		<include src="canvas.js" />
