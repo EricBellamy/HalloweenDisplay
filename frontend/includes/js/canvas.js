@@ -227,10 +227,20 @@ function renderPointList() {
 			encodeURI();
 			renderCanvas();
 		}.bind(point));
-		hex.addEventListener("focus", function(event){
+		hex.addEventListener("focus", function(pointRef, event){
 			const that = this;
 			setTimeout(function(){ that.selectionStart = that.selectionEnd = 10000; }, 0);
-		});
+
+			LAST_MOUSE_POINT.x = pointRef.x;
+			LAST_MOUSE_POINT.y = pointRef.y;
+			renderCanvas();
+		}.bind(hex, point));
+
+		hex.addEventListener("blur", function(pointRef, event){
+			LAST_MOUSE_POINT.x = -1;
+			LAST_MOUSE_POINT.y = -1;
+			renderCanvas();
+		}.bind(hex, point));
 
 		chevronUp.addEventListener("click", function (pointRef) {
 			movePoint(pointRef, -1);
