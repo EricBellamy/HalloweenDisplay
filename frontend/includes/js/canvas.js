@@ -32,7 +32,12 @@ canvas.style.height = `${canvasSize}px`;
 
 // Rendering functions
 let CURRENT_COLOR = "";
-function drawLine(startX, startY, endX, endY, color) {
+function drawLine(startX, startY, endX, endY, color, debug = false) {
+	startX *= downscaleFactor;
+	startY *= downscaleFactor;
+	endX *= downscaleFactor;
+	endY *= downscaleFactor;
+
 	if (CURRENT_COLOR != color) context.strokeStyle = `#${color}`;
 	context.beginPath();
 	context.moveTo(startX * scale, startY * scale);
@@ -42,21 +47,22 @@ function drawLine(startX, startY, endX, endY, color) {
 function drawGridLines() {
 	const limit = canvasResolution / gridLineSpacing / downscaleFactor;
 	for (let a = 0; a <= limit; a++) {
-		drawLine(a * gridLineSpacing * downscaleFactor, 0, a * gridLineSpacing * downscaleFactor, canvasResolution, "2a2a2a");
-		drawLine(0, a * gridLineSpacing * downscaleFactor, canvasResolution, a * gridLineSpacing * downscaleFactor, "2a2a2a");
+		let linePos = a * gridLineSpacing;
+		drawLine(linePos, 0, linePos, canvasResolution / downscaleFactor, "2a2a2a");
+		drawLine(0, linePos, canvasResolution / downscaleFactor, linePos, "2a2a2a");
 	}
 }
 
 let CURRENT_FILL = "";
 let CURRENT_ALPHA = -1;
-function drawPoint(x, y, hex, alpha = 1) {
+function drawPoint(x, y, hex, alpha = 1, POINT_SCALE = 1) {
 	if (hexToRgba(hex, alpha) != false && (CURRENT_FILL != hex || CURRENT_ALPHA != alpha)) {
 		context.fillStyle = hexToRgba(hex, alpha);
 		CURRENT_FILL = hex;
 		CURRENT_ALPHA = alpha;
 	};
 	
-	const pointSize = POINT_SIZE * downscaleFactor * scale;
+	const pointSize = POINT_SIZE * downscaleFactor * scale * POINT_SCALE;
 	context.fillRect((x * downscaleFactor * scale) - pointSize / 2, (y * downscaleFactor * scale) - pointSize / 2, pointSize, pointSize);
 }
 
@@ -72,7 +78,8 @@ canvas.addEventListener("mouseleave", function (event) {
 });
 canvas.addEventListener("click", function (event) {
 	const mousePoint = getMousePoint(event);
-	createPoint(mousePoint)
+	createPoint(mousePoint);
+	encodeURI();
 });
 drawGridLines();
 
@@ -110,6 +117,9 @@ function renderCanvas(event, left = false) {
 		LAST_MOUSE_POINT = mousePoint;
 	}
 
+	// Draw canvas lines
+	renderCanvasLines();
+
 	// Draw saved points here
 	const matched = renderCanvasPoints(LAST_MOUSE_POINT);
 	
@@ -141,11 +151,11 @@ function deletePoint(coord){
 	}
 	return false;
 }
-function createPoint(coord) {
+function createPoint(coord, hex = "ffffff") {
 	if(deletePoint(coord)) return;
 	points.push({
 		id: new Date().getTime(),
-		hex: "ffffff",
+		hex: hex,
 		alpha: "ff",
 		...coord
 	});
@@ -169,6 +179,7 @@ function movePoint(pointRef, direction) {
 			}
 		}
 	}
+	encodeURI();
 	renderPointList();
 }
 function updatePointElement(point){
@@ -202,12 +213,19 @@ function renderPointList() {
 			background: parts[1]
 		};
 
+		pointEle.addEventListener("mouseover", function(event){
+			LAST_MOUSE_POINT.x = this.x;
+			LAST_MOUSE_POINT.y = this.y;
+			renderCanvas();
+		}.bind(point));
+
 		hex.addEventListener("input", function(event){
 			if(6 < event.target.value.length) event.target.value = event.target.value.substring(0, 6);
 
 			this.hex = event.target.value;
 			updatePointElement(this);
-			renderCanvasPoints();
+			encodeURI();
+			renderCanvas();
 		}.bind(point));
 		hex.addEventListener("focus", function(event){
 			const that = this;
@@ -223,7 +241,6 @@ function renderPointList() {
 
 		pointsContainer.appendChild(pointEle);
 	}
-	// renderCanvasPoints(LAST_MOUSE_POINT);
 	renderCanvas();
 }
 function renderCanvasPoints(mousePoint = false){
@@ -231,8 +248,54 @@ function renderCanvasPoints(mousePoint = false){
 	for (const point of points) {
 		if(mousePoint != false && (mousePoint.x === point.x && mousePoint.y === point.y)){
 			matchedCanvasPoint = true;
-			drawPoint(point.x, point.y, point.hex, 0.3);
+			drawPoint(point.x, point.y, point.hex, 0.6, 3);
 		} else drawPoint(point.x, point.y, point.hex);
 	}
 	return matchedCanvasPoint;
 }
+function renderCanvasLines(){
+	const pointsLen = points.length;
+	if(pointsLen <= 1) return;
+
+	let point, next, a;
+	for(a = 0; a < pointsLen - 1; a++){
+		point = points[a];
+		next = points[a + 1];
+
+		drawLine(point.x, point.y, next.x, next.y, point.hex);
+	}
+	if(2 < pointsLen){
+		point = points[a];
+		next = points[0];
+		drawLine(point.x, point.y, next.x, next.y, point.hex);
+	}
+}
+
+function encodeURI(){
+	let pointString = "";
+	for(const point of points){
+		pointString += `${point.hex},${point.x},${point.y},`;
+	}
+	pointString = pointString.substring(0, pointString.length - 1);
+
+	const params = new URLSearchParams(location.search);
+	params.set('points', pointString);
+	params.toString(); // => points=ffffff|1|2
+	window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
+}
+function loadURI(){
+	const savedPointInfo = new URLSearchParams(location.search).get("points");
+	if(savedPointInfo != null){
+		const savedPoints = savedPointInfo.split(",");
+		
+		const pointData = 3;
+		const goodPoints = Math.floor(savedPoints.length / pointData);
+		for(let a = 0; a < goodPoints; a++){
+			createPoint({
+				x: parseInt(savedPoints[a * pointData + 1]),
+				y: parseInt(savedPoints[a * pointData + 2])
+			}, savedPoints[a * pointData]);
+		}
+	}
+}
+loadURI();
