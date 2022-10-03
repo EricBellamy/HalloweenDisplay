@@ -124,7 +124,7 @@ function renderCanvas(event, left = false) {
 	const matched = renderCanvasPoints(LAST_MOUSE_POINT);
 	
 	// Draw mouse indicator
-	if(!left && !matched) drawPoint(LAST_MOUSE_POINT.x, LAST_MOUSE_POINT.y, "fff", 0.1);
+	if(!left && !matched) drawPoint(LAST_MOUSE_POINT.x, LAST_MOUSE_POINT.y, "fff", 0.4);
 }
 
 
