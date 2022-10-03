@@ -42,6 +42,8 @@ let LAST_BUILD_DATA = { updated: {} };
 
 	// FIX THIS TO USE NEW MODIFIED DATE SYSTEM
 
+	fs.ensureDir(distPath);
+
 	// Build all the page files in the folder
 	await pages.build(async function(path, PAGE_HTML, resolve){
 		fs.writeFileSync(distPath + path, PAGE_HTML.html);
