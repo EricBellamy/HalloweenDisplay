@@ -25,16 +25,13 @@
 		}
 
 
-		/* General */
-		.header {
-			padding-bottom: 10px;
-		}
-
-
 		/* Left Column */
 		#canvas {
 			background: #111;
 			cursor: none;
+		}
+		#left .header {
+			padding: 20px 0;
 		}
 
 
@@ -42,6 +39,23 @@
 		#right {
 			padding-left: 40px;
 			min-width: 280px;
+		}
+		#right .header {
+			display: flex;
+		}
+		#right .header .label {
+			margin-right: auto;
+			padding: 20px 0;
+		}
+		#right .header #exportContainer {
+			padding: 10px 0;
+		}
+		#right .header #export {
+			cursor: pointer;
+			padding: 10px 20px;
+		}
+		#right .header #export:hover {
+			background: #ffffff22;
 		}
 
 		.point {
@@ -114,11 +128,17 @@
 			<canvas id="canvas"></canvas>
 		</div>
 		<div id="right">
-			<div class="header">Points</div>
+			<div class="header">
+				<div class="label">Points</div>
+				<div id="exportContainer">
+					<div id="export">Export</div>
+				</div>
+			</div>
 			<div id="points"></div>
 		</div>
 	</div>
 	<include src="canvas.js" />
+	<include src="export.js" />
 </body>
 
 </html>
