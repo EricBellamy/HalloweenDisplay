@@ -5,9 +5,27 @@
 		title="Laser Points Editor"
 		description="Create a points instruction set for the laser projector"
 		/>
+
+		<style>
+			body {
+				background: #000;
+			}
+			#canvas {
+				background: #111;
+			}
+			#container {
+				padding: 20px;
+				display: flex;
+				justify-content: center;
+			}
+		</style>
 	</head>
 	<body>
-		<canvas id="canvas"></canvas>
+		<div id="container">
+			<div id="wrapper">
+				<canvas id="canvas"></canvas>
+			</div>
+		</div>
 		<include src="canvas.js" />
 	</body>
 </html>
