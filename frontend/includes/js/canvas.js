@@ -161,7 +161,7 @@ function deletePoint(coord){
 }
 
 let pointIndex = 0;
-function createPoint(coord, hex = "ffffff") {
+function createPoint(coord, hex = "fff") {
 	if(deletePoint(coord)) return;
 	points.push({
 		id: new Date().getTime() + "|" + pointIndex,
@@ -305,7 +305,7 @@ function encodeURI(){
 
 	const params = new URLSearchParams(location.search);
 	params.set('points', pointString);
-	params.toString(); // => points=ffffff|1|2
+	params.toString(); // => points=fff|1|2
 	window.history.pushState({}, '', `${location.pathname}?${params.toString()}`);
 }
 function loadURI(){
