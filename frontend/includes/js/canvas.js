@@ -330,6 +330,9 @@ window.addEventListener('popstate', (event) => {
 	renderCanvas();
 });
 
+console.log("Trying to render to canvas");
 
 loadURI();
 renderCanvas();
+
+console.log("Finished initial render");
