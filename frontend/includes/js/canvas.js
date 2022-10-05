@@ -24,8 +24,6 @@ const scale = Math.min(
 );
 const canvasSize = canvasResolution * scale;
 
-console.log(`Initializing canvas with size: ${canvasSize}`);
-
 canvas.width = canvasSize;
 canvas.style.width = `${canvasSize}px`;
 canvas.height = canvasSize;
@@ -109,7 +107,6 @@ function hexToRgba(hex, alpha = 1){
 
 let LAST_MOUSE_POINT = { x: -1, y: -1 };
 function renderCanvas(event, left = false) {
-	console.log("Rendering the grid lines...");
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	drawGridLines();
 
@@ -119,17 +116,11 @@ function renderCanvas(event, left = false) {
 		LAST_MOUSE_POINT = mousePoint;
 	}
 
-	console.log("Drawing the point lines...");
-
 	// Draw canvas lines
 	renderCanvasLines();
 
-	console.log("Drawing the points...");
-
 	// Draw saved points here
 	const matched = renderCanvasPoints(LAST_MOUSE_POINT);
-	
-	console.log("Drawing the mouse indicator...");
 
 	// Draw mouse indicator
 	if(!left && !matched) drawPoint(LAST_MOUSE_POINT.x, LAST_MOUSE_POINT.y, "fff", 0.4);
@@ -330,9 +321,5 @@ window.addEventListener('popstate', (event) => {
 	renderCanvas();
 });
 
-console.log("Trying to render to canvas");
-
 loadURI();
 renderCanvas();
-
-console.log("Finished initial render");
