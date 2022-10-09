@@ -21,7 +21,7 @@ class Timeline {
 	rows = 0;
 	init() {
 		// Render the max number of background boxes
-		this.rows = this.countEvents();
+		this.rows = window.device.count();
 
 		// Reset
 		this.ele.background.innerHTML = "";
@@ -47,6 +47,8 @@ class Timeline {
 		const boxesPerRow = Math.floor(displayBounds.width / boxDim);
 		this.view.max = boxesPerRow;
 
+
+		window.device.findAt(4);
 
 		// Create the boxes
 		for (let a = 0; a < boxesPerRow; a++) {
@@ -89,17 +91,6 @@ class Timeline {
 
 	}
 
-
-
-	countEvents() {
-		let count = 0;
-
-		for (let DEVICE_KEY in DEVICES) {
-			count += DEVICES[DEVICE_KEY].length;
-		}
-
-		return count;
-	}
 	renderMinimap() {
 
 	}
