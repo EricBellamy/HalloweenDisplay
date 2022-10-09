@@ -1,0 +1,19 @@
+#lasers {
+	display: flex;
+}
+
+.laser {
+	flex: 1;
+	margin-right: 4px;
+	background: #212126;
+	opacity: 0.8;
+}
+.laser:hover {
+	opacity: 1;
+}
+#lasers .laser:last-child {
+	margin-right: 0;
+}
+.laser > div {
+	padding-bottom: 100%;
+}

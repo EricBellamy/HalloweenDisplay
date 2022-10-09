@@ -1,0 +1,47 @@
+#minimap {
+	background: #000;
+	width: 100%;
+	margin-top: auto;
+	margin-bottom: 10px;
+	height: 40px;
+}
+
+#timeline {
+	width: 100%;
+	position: relative;
+}
+
+#timelineBackground {
+	display: flex;
+	justify-content: center;
+}
+#timelineBackground .column {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+#timelineBackground .column.active {
+	background: #fa0;
+}
+.box {
+	padding: 4px;
+	cursor: pointer;
+	position: relative;
+}
+.box:before {
+	content: '';
+	background: #1b1c1d;
+	position: absolute;
+	left: 2px;
+	right: 2px;
+	top: 2px;
+	bottom: 2px;
+}
+.box.active:before {
+	background: #f00;
+}
+
+
+#timelineEvents {
+	position: absolute;
+}

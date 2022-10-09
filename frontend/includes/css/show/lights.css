@@ -1,0 +1,20 @@
+#lights {
+	display: flex;
+	padding: 20px 0;
+}
+
+.light {
+	flex: 1;
+	margin-right: 20px;
+	background: #2e2f33;
+	opacity: 0.7;
+}
+.light:hover {
+	opacity: 1;
+}
+#lights .light:last-child {
+	margin-right: 0;
+}
+.light > div {
+	padding-bottom: 100%;
+}

@@ -9,8 +9,183 @@
 </head>
 
 <body>
-	<div id="display"></div>
-	<div id="timeline"></div>
+	<div id="ShowVertContainer">
+		<div id="ShowHorzContainer">
+			<div id="display">
+				<include src="show/lasers.css" />
+				<div id="lasers">
+					<div id="laser-1" class="laser selected"><div></div></div>
+					<div id="laser-2" class="laser"><div></div></div>
+					<div id="laser-3" class="laser"><div></div></div>
+				</div>
+
+				<include src="show/lights.css" />
+				<div id="lights">
+					<div id="light-1" class="light"><div></div></div>
+					<div id="light-2" class="light"><div></div></div>
+					<div id="light-3" class="light"><div></div></div>
+					<div id="light-4" class="light"><div></div></div>
+					<div id="light-5" class="light"><div></div></div>
+					<div id="light-6" class="light"><div></div></div>
+					<div id="light-7" class="light"><div></div></div>
+				</div>
+			</div>
+			<canvas id="minimap"></canvas>
+			<div id="timeline">
+				<div id="timelineEvents"></div>
+				<div id="timelineBackground"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+
+		const DEVICE_TYPES = {
+			// binary: {
+			// 	edit: function () {
+
+			// 	}
+			// },
+			// float: {
+			// 	edit: function () {
+
+			// 	}
+			// }
+		}
+
+		const DEVICES = {
+			// "laser": [
+			// 	{
+			// 		id: 1,
+			// 		type: "binary"
+			// 	},
+			// 	{
+			// 		id: 2,
+			// 		type: "binary"
+			// 	},
+			// 	{
+			// 		id: 3,
+			// 		type: "binary"
+			// 	}
+			// ],
+			// "light": [
+			// 	{
+			// 		id: 1,
+			// 		type: "float"
+			// 	},
+			// 	{
+			// 		id: 2,
+			// 		type: "float"
+			// 	},
+			// 	{
+			// 		id: 3,
+			// 		type: "float"
+			// 	},
+			// 	{
+			// 		id: 4,
+			// 		type: "float"
+			// 	},
+			// 	{
+			// 		id: 5,
+			// 		type: "float"
+			// 	},
+			// 	{
+			// 		id: 6,
+			// 		type: "float"
+			// 	},
+			// 	{
+			// 		id: 7,
+			// 		type: "float"
+			// 	}
+			// ]
+		}
+	</script>
+
+	<!-- Setup Functions -->
+	<script>
+		function addDeviceType(name, params) {
+			DEVICE_TYPES[name] = params;
+		}
+		function addDevice(name, type, element, color = "79a8d0") {
+			if (DEVICE_TYPES[type] === undefined) throw new Error("addDevice :: Not a valid device type");
+			if (!element) throw new Error("addDevice :: Element does not exist");
+			if (DEVICES[name] === undefined) DEVICES[name] = [];
+
+			element.classList.toggle("pointer", true);
+			element.addEventListener("click", function(event){
+				event.stopPropagation();
+				selectDevice(this);
+			});
+
+			DEVICES[name].push({
+				id: DEVICES[name].length + 1,
+				type: type,
+				color: color,
+				element: element
+			});
+		}
+
+		document.addEventListener("click", function(){
+			selectDevice();
+		});
+	</script>
+
+	<include src="show/metadata.js" />
+	<include src="show/timeline.js" />
+
+	<!-- Usage Functions -->
+	<script>
+		function selectDevice(device) {
+			window.timeline.selected = device;
+
+			// Update the device selection here
+			const selected = document.querySelector(".selected");
+			if(selected) selected.classList.toggle("selected", false);
+			if(device) device.classList.toggle("selected", true);
+		}
+	</script>
+
+	<!-- Device initialization -->
+	<script>
+		addDeviceType("binary", {
+			edit: function () {
+
+			}
+		});
+		addDeviceType("float", {
+			edit: function () {
+
+			}
+		});
+
+		addDevice("laser", "binary", document.querySelector("#laser-1"));
+		addDevice("laser", "binary", document.querySelector("#laser-2"));
+		addDevice("laser", "binary", document.querySelector("#laser-3"));
+
+		addDevice("light", "float", document.querySelector("#light-1"), "438f65");
+		addDevice("light", "float", document.querySelector("#light-2"), "438f65");
+		addDevice("light", "float", document.querySelector("#light-3"), "438f65");
+		addDevice("light", "float", document.querySelector("#light-4"), "438f65");
+		addDevice("light", "float", document.querySelector("#light-5"), "438f65");
+		addDevice("light", "float", document.querySelector("#light-6"), "438f65");
+		addDevice("light", "float", document.querySelector("#light-7"), "438f65");
+
+		window.timeline.init();
+		window.timeline.render();
+
+		console.log(window.timeline.ele.background_columns);
+		setInterval(function(){
+			window.timeline.ele.background_columns[window.timeline.view.index].classList.toggle("active", false);
+			window.timeline.view.index = (window.timeline.view.index + 1) % window.timeline.view.max;
+			window.timeline.ele.background_columns[window.timeline.view.index].classList.toggle("active", true);
+		}, 200);
+	</script>
+
+	<!-- Display Setup -->
+	<script>
+
+	</script>
 </body>
 
 </html>
