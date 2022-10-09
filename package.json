@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon -e js,html --ignore dist/* frontend/build.js"
+    "start": "pm2 start pm2.json"
   },
   "author": "",
   "license": "ISC",
@@ -12,7 +12,7 @@
     "clean-css": "^5.3.1",
     "fs-extra": "^10.1.0",
     "node-html-parser": "^5.3.3",
-    "nodemon": "^2.0.20",
+    "pm2": "^5.2.0",
     "terser": "^5.14.2"
   }
 }

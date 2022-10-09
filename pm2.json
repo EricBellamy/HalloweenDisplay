@@ -1,0 +1,9 @@
+{
+    "script": "frontend/build.js",
+    "watch": true,
+    "ignore_watch": ["dist"],
+    "watch_options": {
+        "followSymlinks": false
+    },
+    "name": "HALLOWEEN_DISPLAY"
+}
