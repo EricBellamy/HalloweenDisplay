@@ -19,7 +19,7 @@ let calcTempo = function (buffer) {
     }
     let mt = new MusicTempo(audioData);
 
-    console.log(mt.tempo);
+    return mt;
 }
 
 function getSong(url) {
@@ -76,7 +76,6 @@ function getSong(url) {
                     "Channel": output.channel,
                     "Duration": output.duration
                 }
-                fs.writeFileSync("metadata.json", JSON.stringify(metadata));
 
                 // console.log(__dirname+"/"+output.title+".mp3");
                 // console.log(path.resolve(__dirname+"/"+output.title+".mp3"));
@@ -86,7 +85,14 @@ function getSong(url) {
 
                 let data = fs.readFileSync(filename);
                 let context = new AudioContext();
-                context.decodeAudioData(data, calcTempo);
+                context.decodeAudioData(data, (buffer) => {
+                    let tm = calcTempo(buffer);
+                    metadata["Tempo"] = tm.tempo;
+                    metadata["Beats"] = tm.beats;
+
+                    fs.writeFileSync("metadata.json", JSON.stringify(metadata));
+                });
+
             }
         });
     });
