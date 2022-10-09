@@ -22,80 +22,88 @@ let calcTempo = function (buffer) {
     return mt;
 }
 
-function getSong(url) {
-    youtubedl(url, {
-        dumpSingleJson: true,
-        noCheckCertificates: true,
-        noWarnings: true,
-        preferFreeFormats: true,
-        addHeader: [
-            'referer:youtube.com',
-            'user-agent:googlebot'
-        ]
-
-    }).then(output => {
+module.exports = {
+    getSong: function (url, res, callback) {
         youtubedl(url, {
+            dumpSingleJson: true,
             noCheckCertificates: true,
             noWarnings: true,
             preferFreeFormats: true,
             addHeader: [
                 'referer:youtube.com',
                 'user-agent:googlebot'
-            ],
-            "f": "ba",
-            "x": true,
-            "audio-format": "mp3",
-            "o": "%(title)s.%(ext)s",
-            "write-thumbnail": true,
-            "write-info-json": true,
-            "restrict-filenames": true,
+            ]
 
-        }).then(saved => {
+        }).then(output => {
+            youtubedl(url, {
+                noCheckCertificates: true,
+                noWarnings: true,
+                preferFreeFormats: true,
+                addHeader: [
+                    'referer:youtube.com',
+                    'user-agent:googlebot'
+                ],
+                "f": "ba",
+                "x": true,
+                "audio-format": "mp3",
+                "o": "download/%(title)s.%(ext)s",
+                "write-thumbnail": true,
+                "write-info-json": true,
+                "restrict-filenames": true,
 
-            // console.log(saved.substring(saved.indexOf("[download]") + "[download]".length))
-            let filename = false;
-            const savedParts = saved.split("\n");
-            for (let part of savedParts) {
-                part = part.trim();
-                if (part.indexOf("[ExtractAudio]") === 0){
-                    const extractParts = part.split(" ");
-                    for(let extractPart of extractParts){
-                        if(extractPart.indexOf(".mp3") != -1) {
-                            filename = extractPart.trim().split(".mp3")[0]+".mp3";
-                            break;
+            }).then(saved => {
+
+                // console.log(saved.substring(saved.indexOf("[download]") + "[download]".length))
+                let filename = false;
+                const savedParts = saved.split("\n");
+                for (let part of savedParts) {
+                    part = part.trim();
+                    if (part.indexOf("[ExtractAudio]") === 0){
+                        const extractParts = part.split(" ");
+                        for(let extractPart of extractParts){
+                            if(extractPart.indexOf(".mp3") != -1) {
+                                filename = extractPart.trim().split(".mp3")[0]+".mp3";
+                                break;
+                            }
                         }
-                    }
-                    if(filename) break;
-                } 
-            }
-
-            if (filename) {
-
-                let metadata = {
-                    "Title": output.title,
-                    "Channel": output.channel,
-                    "Duration": output.duration
+                        if(filename) break;
+                    } 
                 }
 
-                // console.log(__dirname+"/"+output.title+".mp3");
-                // console.log(path.resolve(__dirname+"/"+output.title+".mp3"));
-                // console.log(__dirname+"/Gimme\!\ Gimme\!\ Gimme\!\ \(A\ Man\ After\ Midnight\)\,\ performed\ by\ Victor\ Frankenstein\ ｜\ AAAH\!BBA.mp3");
+                if (filename) {
 
-                // Gimme! Gimme! Gimme! (A Man After Midnight), performed by Victor Frankenstein | AAAH!BBA.mp3
+                    let metadata = {
+                        "filename": filename,
+                        "title": output.title,
+                        "channel": output.channel,
+                        "duration": output.duration
+                    }
 
-                let data = fs.readFileSync(filename);
-                let context = new AudioContext();
-                context.decodeAudioData(data, (buffer) => {
-                    let tm = calcTempo(buffer);
-                    metadata["Tempo"] = tm.tempo;
-                    metadata["Beats"] = tm.beats;
+                    // console.log(__dirname+"/"+output.title+".mp3");
+                    // console.log(path.resolve(__dirname+"/"+output.title+".mp3"));
+                    // console.log(__dirname+"/Gimme\!\ Gimme\!\ Gimme\!\ \(A\ Man\ After\ Midnight\)\,\ performed\ by\ Victor\ Frankenstein\ ｜\ AAAH\!BBA.mp3");
 
-                    fs.writeFileSync("metadata.json", JSON.stringify(metadata));
-                });
+                    // Gimme! Gimme! Gimme! (A Man After Midnight), performed by Victor Frankenstein | AAAH!BBA.mp3
 
-            }
+                    let data = fs.readFileSync(filename);
+                    let context = new AudioContext();
+                    context.decodeAudioData(data, function(buffer){
+                        let tm = calcTempo(buffer);
+                        metadata["tempo"] = tm.tempo;
+                        metadata["beats"] = tm.beats;
+
+                        fs.writeFileSync("download/metadata.json", JSON.stringify(metadata));
+
+                        console.log("Metadata written");
+
+                        callback(res);
+
+                    });
+
+                }
+            });
         });
-    });
+    }
 }
 
-getSong("https://www.youtube.com/watch?v=sABdtEaKMYE");
+// module.exports.getSong("https://www.youtube.com/watch?v=sABdtEaKMYE");

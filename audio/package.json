@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fs-extra": "^10.1.0",
     "music-tempo": "^1.0.3",
     "web-audio-api": "^0.2.2",
     "youtube-dl-exec": "^2.1.6"
