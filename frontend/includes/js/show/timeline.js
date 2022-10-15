@@ -6,6 +6,7 @@ class Timeline {
 		max: 20, // The max beats that can be shown
 		bpmScale: 2, // How many beats per beat
 		minimapFps: 60,
+		minimapScale: 2
 	};
 	SONG = {
 		"Title": "Gimme! Gimme! Gimme! (A Man After Midnight), performed by Victor Frankenstein | AAAH!BBA",
@@ -54,6 +55,11 @@ class Timeline {
 
 	rows = 0;
 	init() {
+		// Initialize the canvas context
+		this.ele.minimapContext = this.ele.minimap.getContext("2d");
+
+
+
 		this.ele.minimapContainer.addEventListener("mousedown", function () {
 			window.mouseDownOn = "minimap";
 		});
@@ -90,6 +96,22 @@ class Timeline {
 		this.ele.timeline_columns = [];
 		this.ele.timeline_boxes = [];
 		this.ele.timeline_markers = [];
+
+
+
+
+
+
+		// Update minimap size
+		const minimapBounds = this.ele.minimap.getBoundingClientRect();
+		this.view.beatWidth = minimapBounds.width / this.SONG.count
+		this.SONG.maxWindowCount = window.timeline.SONG.count - window.timeline.view.max;
+
+		this.ele.minimap.width = minimapBounds.width * this.view.minimapScale;
+		this.ele.minimap.height = this.rows * this.view.beatWidth * this.view.minimapScale;
+		this.ele.minimap.style.height = this.rows * this.view.beatWidth + "px";
+
+
 
 
 
@@ -192,6 +214,9 @@ class Timeline {
 		}
 
 
+
+
+
 		// Update the minimap window
 		this.updateMinimapWindowSize();
 		// minimapWindow
@@ -202,10 +227,9 @@ class Timeline {
 		const BeatTime = 60 / parseInt(window.meta.Tempo);
 		for (let a = 0; a < Beats.length; a++) {
 			Beats[a] = (Math.round((Beats[a] / BeatTime) * 2) / 2);
-		}
+		};
 
 		this.SONG.count = Math.ceil((this.SONG.Duration / 60) * this.SONG.Tempo);
-		this.SONG.maxWindowCount = window.timeline.SONG.count - window.timeline.view.max;
 	}
 
 
@@ -216,12 +240,12 @@ class Timeline {
 		this.updateMinimapWindowPosition();
 		this.render();
 	}
-	decreaseIndex(){
+	decreaseIndex() {
 		this.view.index = Math.max(0, this.view.index - 1);
 		this.updateMinimapWindowPosition();
 		this.render();
 	}
-	increaseIndex(){
+	increaseIndex() {
 		this.view.index = Math.min(this.SONG.maxWindowCount, this.view.index + 1);
 		this.updateMinimapWindowPosition();
 		this.render();
@@ -327,10 +351,6 @@ class Timeline {
 		this.updateEventValue(this.view.index + timelineIndex, deviceName);
 
 		this.render();
-	}
-
-	renderMinimap() {
-		// Draw the events to the canvas
 	}
 
 	updateBeatDisplayElement(beatIndex, device, value) {
@@ -497,6 +517,104 @@ class Timeline {
 				input.unRender(DEVICE);
 			}
 		}
+
+
+
+		this.renderMinimap();
+	}
+
+	drawMinimapRect(startY, startX, endX, color) {
+		this.ele.minimapContext.fillStyle = "#" + color;
+		this.ele.minimapContext.fillRect(
+			startX * this.view.beatWidth * this.view.minimapScale,
+			startY * this.view.beatWidth * this.view.minimapScale,
+			(endX - startX) * this.view.beatWidth * this.view.minimapScale,
+			this.view.beatWidth * this.view.minimapScale);
+	}
+	renderMinimap() {
+		this.ele.minimapContext.clearRect(0, 0, this.ele.minimapContext.canvas.width, this.ele.minimapContext.canvas.height)
+
+		// Draw the events to the canvas
+		const DEVICE_VALUE_INFO = {};
+		let index = 0;
+		for (const DEVICE of window.device.deviceList) {
+			DEVICE_VALUE_INFO[DEVICE.name] = {
+				index: index,
+				device: DEVICE,
+				value: 0,
+				startingBeat: undefined,
+				startingValue: undefined,
+			};
+			index++;
+		}
+		let targetEvents, targetEventKeys, targetDeviceInfo;
+		for (let BEAT_INDEX = 0; BEAT_INDEX < this.SONG.count; BEAT_INDEX++) {
+			if (this.events[BEAT_INDEX]) {
+				targetEvents = this.events[BEAT_INDEX];
+				targetEventKeys = Object.keys(targetEvents);
+
+				for (const targetEventKey of targetEventKeys) {
+					const DEVICE_VALUE = DEVICE_VALUE_INFO[targetEventKey];
+
+					// If we already have a starting beat
+					if (DEVICE_VALUE.startingBeat != undefined && DEVICE_VALUE.value != targetEvents[targetEventKey].value) {
+						this.drawMinimapRect(
+							DEVICE_VALUE.index,
+							DEVICE_VALUE.startingBeat,
+							BEAT_INDEX,
+							DEVICE_VALUE.device.color
+						);
+
+						if(targetEvents[targetEventKey].value === 0){
+							DEVICE_VALUE.startingBeat = undefined;
+							DEVICE_VALUE.startingValue = undefined;
+						} else {
+							DEVICE_VALUE.startingBeat = BEAT_INDEX;
+							DEVICE_VALUE.startingValue = targetEvents[targetEventKey].value;
+						}
+					} else {
+						// Start the beat rectangle
+						DEVICE_VALUE.startingBeat = BEAT_INDEX;
+						DEVICE_VALUE.startingValue = targetEvents[targetEventKey].value;
+					}
+					DEVICE_VALUE.value = targetEvents[targetEventKey].value;
+				}
+			}
+		}
+
+		// Draw the beats that are active
+		for (const DEVICE_KEY in DEVICE_VALUE_INFO) {
+			targetDeviceInfo = DEVICE_VALUE_INFO[DEVICE_KEY];
+			if (targetDeviceInfo.startingBeat != undefined) {
+				this.drawMinimapRect(
+					targetDeviceInfo.index,
+					targetDeviceInfo.startingBeat,
+					this.SONG.count - 1,
+					targetDeviceInfo.device.color
+				);
+			}
+		}
+
+
+		// console.log(EVENT_KEYS_TO_RENDER);
+		// let DEVICE_EVENTS, BEAT_INFO, BEAT_VALUE;
+		// let index = 0;
+		// for (const DEVICE of window.device.deviceList) {
+		// 	this.ele.minimapContext.fillStyle = "#" + DEVICE.color;
+
+		// 	DEVICE_EVENTS = EVENT_KEYS_TO_RENDER[DEVICE.name];
+		// 	if (DEVICE_EVENTS) {
+		// 		for (const BEAT_INDEX in DEVICE_EVENTS) {
+		// 			BEAT_INFO = DEVICE_EVENTS[BEAT_INDEX];
+
+		// 			// Draw the rect on the canvas
+		// 			if (BEAT_INFO.value != 0) {
+		// 				this.ele.minimapContext.fillRect(BEAT_INDEX * this.view.beatWidth * this.view.minimapScale, index * this.view.beatWidth * this.view.minimapScale, this.view.beatWidth * this.view.minimapScale, this.view.beatWidth * this.view.minimapScale);
+		// 			}
+		// 		}
+		// 	}
+		// 	index++;
+		// }
 	}
 }
 
