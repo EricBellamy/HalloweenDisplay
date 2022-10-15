@@ -1,10 +1,18 @@
 class Timeline {
 	selected = undefined;
 	view = {
+		hightlightIndex: 0,
 		index: 0, // The index of the first beat shown on the timeline
 		max: 20, // The max beats that can be shown
-		bpm: 108.347,
 		bpmScale: 2, // How many beats per beat
+		minimapFps: 60,
+	};
+	SONG = {
+		"Title": "Gimme! Gimme! Gimme! (A Man After Midnight), performed by Victor Frankenstein | AAAH!BBA",
+		"Channel": "brian david gilbert",
+		"Duration": 225,
+		"Tempo": 108.347,
+		count: 407
 	};
 	SAVE = {
 		instructions: {}
@@ -28,6 +36,9 @@ class Timeline {
 		sidebar: document.querySelector("#timelineSidebar"),
 
 		minimap: document.querySelector("#minimap"),
+		minimapContainer: document.querySelector("#minimapContainer"),
+		minimapWindow: document.querySelector("#minimapWindow"),
+
 		events: document.querySelector("#timelineEvents"),
 		background: document.querySelector("#timelineBackground"),
 
@@ -42,7 +53,35 @@ class Timeline {
 	};
 
 	rows = 0;
-	init(callback) {
+	init() {
+		this.ele.minimapContainer.addEventListener("mousedown", function(){
+			window.mouseDownOn = "minimap";
+		});
+
+		document.addEventListener("mouseup", function(){
+			window.mouseDownOn = undefined;
+		});
+		window.addEventListener("blur", function(){
+			window.mouseDownOn = undefined;
+		});
+		document.addEventListener("mousemove", tired.debounce(function(event){
+			if(window.mouseDownOn === "minimap"){
+				const timelineProgress = Math.min(this.ele.minimapContainer.bounds.width, Math.max(0, event.screenX -  this.ele.minimapContainer.bounds.x)) / this.ele.minimapContainer.bounds.width;
+				const timelineIndex = Math.min(this.SONG.maxWindowCount, Math.max(0, Math.floor(timelineProgress * this.SONG.count - this.view.max / 2)));
+				
+
+				this.view.index = timelineIndex;
+				this.updateMinimapWindowPosition();
+				this.render();
+			}
+		}.bind(this), 1000 / this.view.minimapFps, {
+			leading: true,
+			maxWait: 1000 / this.view.minimapFps
+		}));
+
+		this.resize();
+	}
+	resize() {
 		// Render the max number of background boxes
 		this.rows = window.device.count;
 
@@ -72,7 +111,7 @@ class Timeline {
 			this.ele.container.getBoundingClientRect().height -
 			(displayBounds.height +
 				this.ele.minimap.getBoundingClientRect().height +
-				parseInt(window.getComputedStyle(this.ele.minimap).marginBottom) +
+				parseInt(window.getComputedStyle(this.ele.minimapContainer).marginBottom) +
 				parseInt(window.getComputedStyle(this.ele.container).paddingTop) +
 				parseInt(window.getComputedStyle(this.ele.container).paddingBottom))
 		);
@@ -133,7 +172,7 @@ class Timeline {
 			// The beat marker & activate all devices when clicked
 			const marker = tired.html.create(`<div class="marker noselect"><div>${this.view.index + a}</div></div>`);
 			marker.addEventListener("click", function (boxIndex) {
-				window.timeline.view.index = Math.max(0, (window.timeline.view.index + boxIndex) - 1);
+				window.timeline.view.index = Math.min(window.timeline.SONG.maxWindowCount, Math.max(0, (window.timeline.view.index + boxIndex) - 1));
 				window.timeline.render();
 
 			}.bind(marker, a));
@@ -153,6 +192,11 @@ class Timeline {
 				timelineBox.bounds = timelineBox.getBoundingClientRect();
 			}
 		}
+
+
+		// Update the minimap window
+		this.updateMinimapWindowSize();
+		// minimapWindow
 	}
 
 	initSong() {
@@ -161,14 +205,31 @@ class Timeline {
 		for (let a = 0; a < Beats.length; a++) {
 			Beats[a] = (Math.round((Beats[a] / BeatTime) * 2) / 2);
 		}
+
+		this.SONG.count = Math.ceil((this.SONG.Duration / 60) * this.SONG.Tempo);
+		this.SONG.maxWindowCount = window.timeline.SONG.count - window.timeline.view.max;
+	}
+
+
+	updateMinimapWindowSize(){
+		this.view.minimapWidth = this.ele.minimap.getBoundingClientRect().width;
+		this.view.minimapWindowWidth = (this.view.minimapWidth / this.SONG.count) * this.view.max;
+		this.view.minimapDiffWidth = this.view.minimapWidth - this.view.minimapWindowWidth;
+		this.ele.minimapWindow.style.width = this.view.minimapWindowWidth + "px";
+
+		this.ele.minimapContainer.bounds = this.ele.minimapContainer.getBoundingClientRect();
+	}
+	updateMinimapWindowPosition(){
+		this.ele.minimapWindow.style.left = (this.view.index / this.SONG.count) * this.view.minimapWidth + "px";
 	}
 
 
 
 
+
 	highlightBeat(index) {
-		this.ele.timeline_columns[this.view.index].classList.toggle("active", false);
-		this.view.index = index;
+		this.ele.timeline_columns[this.view.hightlightIndex].classList.toggle("active", false);
+		this.view.hightlightIndex = index;
 		this.ele.timeline_columns[index].classList.toggle("active", true);
 	}
 	highlightNextBeat() {
@@ -196,7 +257,7 @@ class Timeline {
 	getTimestampFromBeatIndex(index) {
 		// Calculate timestamp using BPM & Beat Index
 		return Math.round(
-			(((60 / this.view.bpm) * index) / this.view.bpmScale) * 1000
+			(((60 / this.SONG.Tempo) * index) / this.view.bpmScale) * 1000
 		);
 
 		// return 
@@ -372,6 +433,7 @@ class Timeline {
 		this.timelineElements = [];
 		this.ele.events.innerHTML = "";
 		this.updateMarkerText();
+		this.updateMinimapWindowPosition();
 
 		// Get formatted events
 		const EVENT_KEYS_TO_RENDER = this.getScopedTimelineEventsPerDevice();
