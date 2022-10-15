@@ -54,25 +54,23 @@ class Timeline {
 
 	rows = 0;
 	init() {
-		this.ele.minimapContainer.addEventListener("mousedown", function(){
+		this.ele.minimapContainer.addEventListener("mousedown", function () {
 			window.mouseDownOn = "minimap";
 		});
 
-		document.addEventListener("mouseup", function(){
+		document.addEventListener("mouseup", function () {
 			window.mouseDownOn = undefined;
 		});
-		window.addEventListener("blur", function(){
+		window.addEventListener("blur", function () {
 			window.mouseDownOn = undefined;
 		});
-		document.addEventListener("mousemove", tired.debounce(function(event){
-			if(window.mouseDownOn === "minimap"){
-				const timelineProgress = Math.min(this.ele.minimapContainer.bounds.width, Math.max(0, event.screenX -  this.ele.minimapContainer.bounds.x)) / this.ele.minimapContainer.bounds.width;
+		document.addEventListener("mousemove", tired.debounce(function (event) {
+			if (window.mouseDownOn === "minimap") {
+				const timelineProgress = Math.min(this.ele.minimapContainer.bounds.width, Math.max(0, event.screenX - this.ele.minimapContainer.bounds.x)) / this.ele.minimapContainer.bounds.width;
 				const timelineIndex = Math.min(this.SONG.maxWindowCount, Math.max(0, Math.floor(timelineProgress * this.SONG.count - this.view.max / 2)));
-				
 
-				this.view.index = timelineIndex;
-				this.updateMinimapWindowPosition();
-				this.render();
+
+				this.setIndex(timelineIndex);
 			}
 		}.bind(this), 1000 / this.view.minimapFps, {
 			leading: true,
@@ -211,7 +209,24 @@ class Timeline {
 	}
 
 
-	updateMinimapWindowSize(){
+
+	setIndex(index) {
+		this.view.index = index;
+		this.view.index = Math.min(this.SONG.maxWindowCount, Math.max(0, this.view.index + 1));
+		this.updateMinimapWindowPosition();
+		this.render();
+	}
+	decreaseIndex(){
+		this.view.index = Math.max(0, this.view.index - 1);
+		this.updateMinimapWindowPosition();
+		this.render();
+	}
+	increaseIndex(){
+		this.view.index = Math.min(this.SONG.maxWindowCount, this.view.index + 1);
+		this.updateMinimapWindowPosition();
+		this.render();
+	}
+	updateMinimapWindowSize() {
 		this.view.minimapWidth = this.ele.minimap.getBoundingClientRect().width;
 		this.view.minimapWindowWidth = (this.view.minimapWidth / this.SONG.count) * this.view.max;
 		this.view.minimapDiffWidth = this.view.minimapWidth - this.view.minimapWindowWidth;
@@ -219,7 +234,7 @@ class Timeline {
 
 		this.ele.minimapContainer.bounds = this.ele.minimapContainer.getBoundingClientRect();
 	}
-	updateMinimapWindowPosition(){
+	updateMinimapWindowPosition() {
 		this.ele.minimapWindow.style.left = (this.view.index / this.SONG.count) * this.view.minimapWidth + "px";
 	}
 
