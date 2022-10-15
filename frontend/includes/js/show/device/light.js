@@ -54,10 +54,10 @@ window.popups.float = floatInput;
 
 
 // Register the lights
-window.device.addDevice("light", "float", document.querySelector("#light-1"), "438f65", true);
-window.device.addDevice("light", "float", document.querySelector("#light-2"), "438f65", true);
-window.device.addDevice("light", "float", document.querySelector("#light-3"), "438f65", true);
-window.device.addDevice("light", "float", document.querySelector("#light-4"), "438f65", true);
-window.device.addDevice("light", "float", document.querySelector("#light-5"), "438f65", true);
-window.device.addDevice("light", "float", document.querySelector("#light-6"), "438f65", true);
-window.device.addDevice("light", "float", document.querySelector("#light-7"), "438f65", true);
+window.device.addDevice("light", "float", document.querySelector("#light-1"), "438f65");
+window.device.addDevice("light", "float", document.querySelector("#light-2"), "438f65");
+window.device.addDevice("light", "float", document.querySelector("#light-3"), "438f65");
+window.device.addDevice("light", "float", document.querySelector("#light-4"), "438f65");
+window.device.addDevice("light", "float", document.querySelector("#light-5"), "438f65");
+window.device.addDevice("light", "float", document.querySelector("#light-6"), "438f65");
+window.device.addDevice("light", "float", document.querySelector("#light-7"), "438f65");

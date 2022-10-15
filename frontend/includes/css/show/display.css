@@ -26,11 +26,6 @@ body {
 	padding: 20px;
 }
 
-.selected {
-	border: 1px solid #f00;
-	border-style: inset solid;
-}
-
 .hidden {
 	display: none !important;
 }

@@ -66,7 +66,7 @@ class Timeline {
 			const timelineProgress = Math.min(this.ele.minimapContainer.bounds.width, Math.max(0, event.screenX - this.ele.minimapContainer.bounds.x)) / this.ele.minimapContainer.bounds.width;
 			const timelineIndex = Math.min(this.SONG.maxWindowCount, Math.max(0, Math.floor(timelineProgress * this.SONG.count - this.view.max / 2)));
 			this.setIndex(timelineIndex);
-		});
+		}.bind(this));
 
 		document.addEventListener("mouseup", function () {
 			window.mouseDownOn = undefined;
@@ -223,7 +223,6 @@ class Timeline {
 
 		// Update the minimap window
 		this.updateMinimapWindowSize();
-		// minimapWindow
 	}
 
 	initSong() {
@@ -239,8 +238,7 @@ class Timeline {
 
 
 	setIndex(index) {
-		this.view.index = index;
-		this.view.index = Math.min(this.SONG.maxWindowCount, Math.max(0, this.view.index + 1));
+		this.view.index = Math.min(this.SONG.maxWindowCount, Math.max(0, index));
 		this.updateMinimapWindowPosition();
 		this.render();
 	}

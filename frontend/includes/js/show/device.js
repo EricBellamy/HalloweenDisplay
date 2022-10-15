@@ -94,7 +94,7 @@ class DeviceManager {
 		this.inputs[name] = params;
 		return params;
 	}
-	addDevice(name, inputType, element, color = "79a8d0", rightClickZero = false) {
+	addDevice(name, inputType, element, color = "79a8d0", rightClickZero = true) {
 		if (this.inputs[inputType] === undefined) throw new Error("addDevice :: Not a valid input type");
 		if (!element) throw new Error("addDevice :: Element does not exist");
 		if (this.devices[name] === undefined) this.devices[name] = [];
