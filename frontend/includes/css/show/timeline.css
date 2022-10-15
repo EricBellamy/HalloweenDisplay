@@ -2,32 +2,108 @@
 	background: #000;
 	width: 100%;
 	margin-top: auto;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 	height: 40px;
 }
 
 #timeline {
 	width: 100%;
 	position: relative;
+	display: flex;
 }
+
+
+
+#timelineSidebar {
+	white-space: nowrap;
+	padding-right: 2px;
+}
+
+#timelineSidebar .device {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	cursor: pointer;
+
+	padding: 0 1rem;
+	color: #ffffff88;
+	font-size: 90%;
+
+	position: relative;
+}
+
+#timelineSidebar .device:before {
+	content: '';
+	background: #1b1c1d66;
+	position: absolute;
+	left: 2px;
+	top: 2px;
+	right: 2px;
+	bottom: 2px;
+	z-index: -1;
+}
+
+#timelineSidebar .device:hover:before {
+	background: #1b1c1d;
+}
+
+
+
+#timelineContent {
+	position: relative;
+}
+
 
 #timelineBackground {
 	display: flex;
 	justify-content: center;
 }
+
 #timelineBackground .column {
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
 }
+
 #timelineBackground .column.active {
 	background: #fa0;
 }
-.box {
+
+.marker {
+	position: relative;
+	padding-bottom: 100%;
+	cursor: pointer;
+}
+.marker:before {
+	content: '';
+	background: #1b1c1d;
+	position: absolute;
+	left: 2px;
+	top: 2px;
+	right: 2px;
+	bottom: 2px;
+}
+.marker div {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #ffffff99;
+}
+.marker:hover:before {
+	background: #fff;
+}
+.marker:hover div {
+	color: #1b1c1d;
+}
+
+.box, .beat {
 	padding: 4px;
 	cursor: pointer;
 	position: relative;
 }
+
 .box:before {
 	content: '';
 	background: #1b1c1d;
@@ -37,6 +113,7 @@
 	top: 2px;
 	bottom: 2px;
 }
+
 .box.active:before {
 	background: #f00;
 }
@@ -44,4 +121,25 @@
 
 #timelineEvents {
 	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.beat {
+	position: fixed;
+}
+
+.beat {
+	border: 2px solid #28282f;
+	z-index: 10;
+}
+.beat div {
+	color: #ffffff99;
+	font-size: 90%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }

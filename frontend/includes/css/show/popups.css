@@ -1,0 +1,25 @@
+#laserPopup {
+	position: fixed;
+	z-index: 100;
+	background: green;
+}
+
+#lightPopup {
+	position: fixed;
+	z-index: 100;
+	background: green;
+	padding: 2px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	font-size: 14px;
+}
+#lightPopup input {
+	width: 100%;
+	border: none;
+	outline: none;
+	background: none;
+	text-align: center;
+	color: #fff;
+}

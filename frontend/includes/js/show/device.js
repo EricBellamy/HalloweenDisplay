@@ -1,4 +1,5 @@
 class DeviceManager {
+	current = undefined; // The currently active input
 	devices = {
 		// "laser": [
 		// 	{
@@ -45,7 +46,8 @@ class DeviceManager {
 		// 	}
 		// ]
 	};
-	types = {
+	deviceList = [];
+	inputs = {
 		// binary: {
 		// 	edit: function () {
 
@@ -58,29 +60,21 @@ class DeviceManager {
 		// }
 	};
 
-	findAt(index){
-		let count = 0;
-		let nextCount = 0;
-
-		for (let DEVICE_KEY in this.devices) {
-			nextCount += this.devices[DEVICE_KEY].length;
-			if(index < nextCount){
-				// Loop through this list and return the index
-				console.log("IN HERE SOMEWHERE!");
-				console.log(index);
-				console.log(nextCount);
-			}
-		}
+	
+	findAt(index) {
+		if(index < this.deviceList.length) return this.deviceList[index];
+		return false;
+	}
+	getInput(inputType){
+		return this.inputs[inputType];
+	}
+	setCurrent(input){
+		this.current = input;
 	}
 
-	count(){
-		let count = 0;
-
-		for (let DEVICE_KEY in this.devices) {
-			count += this.devices[DEVICE_KEY].length;
-		}
-
-		return count;
+	count = 0;
+	getDeviceCount(DEVICE_KEY) {
+		return this.devices[DEVICE_KEY].length;
 	}
 	select(device) {
 		window.timeline.selected = device;
@@ -90,12 +84,18 @@ class DeviceManager {
 		if (selected) selected.classList.toggle("selected", false);
 		if (device) device.classList.toggle("selected", true);
 	}
-	
-	addType(name, params) {
-		this.types[name] = params;
+
+	addInput(name, params = {}) {
+		params.current = {};
+		params.setValue = function(value){
+			this.current.value = value;
+		}
+
+		this.inputs[name] = params;
+		return params;
 	}
-	addDevice(name, type, element, color = "79a8d0") {
-		if (this.types[type] === undefined) throw new Error("addDevice :: Not a valid device type");
+	addDevice(name, inputType, element, color = "79a8d0", rightClickZero = false) {
+		if (this.inputs[inputType] === undefined) throw new Error("addDevice :: Not a valid input type");
 		if (!element) throw new Error("addDevice :: Element does not exist");
 		if (this.devices[name] === undefined) this.devices[name] = [];
 
@@ -105,12 +105,20 @@ class DeviceManager {
 			selectDevice(this);
 		});
 
-		this.devices[name].push({
-			id: this.devices[name].length + 1,
-			type: type,
+		const id = this.devices[name].length + 1;
+		const newDevice = {
+			name: `${name}-${id}`,
+			id: id,
+			input: inputType,
 			color: color,
-			element: element
-		});
+			element: element,
+			boxes: [],
+			rightClickZero: rightClickZero
+		};
+		this.devices[name].push(newDevice);
+		this.deviceList.push(newDevice);
+
+		this.count++;
 	}
 }
 window.device = new DeviceManager();
