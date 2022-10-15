@@ -60,8 +60,12 @@ class Timeline {
 
 
 
-		this.ele.minimapContainer.addEventListener("mousedown", function () {
+		this.ele.minimapContainer.addEventListener("mousedown", function (event) {
 			window.mouseDownOn = "minimap";
+
+			const timelineProgress = Math.min(this.ele.minimapContainer.bounds.width, Math.max(0, event.screenX - this.ele.minimapContainer.bounds.x)) / this.ele.minimapContainer.bounds.width;
+			const timelineIndex = Math.min(this.SONG.maxWindowCount, Math.max(0, Math.floor(timelineProgress * this.SONG.count - this.view.max / 2)));
+			this.setIndex(timelineIndex);
 		});
 
 		document.addEventListener("mouseup", function () {
@@ -565,7 +569,7 @@ class Timeline {
 							DEVICE_VALUE.device.color
 						);
 
-						if(targetEvents[targetEventKey].value === 0){
+						if (targetEvents[targetEventKey].value === 0) {
 							DEVICE_VALUE.startingBeat = undefined;
 							DEVICE_VALUE.startingValue = undefined;
 						} else {
@@ -594,27 +598,6 @@ class Timeline {
 				);
 			}
 		}
-
-
-		// console.log(EVENT_KEYS_TO_RENDER);
-		// let DEVICE_EVENTS, BEAT_INFO, BEAT_VALUE;
-		// let index = 0;
-		// for (const DEVICE of window.device.deviceList) {
-		// 	this.ele.minimapContext.fillStyle = "#" + DEVICE.color;
-
-		// 	DEVICE_EVENTS = EVENT_KEYS_TO_RENDER[DEVICE.name];
-		// 	if (DEVICE_EVENTS) {
-		// 		for (const BEAT_INDEX in DEVICE_EVENTS) {
-		// 			BEAT_INFO = DEVICE_EVENTS[BEAT_INDEX];
-
-		// 			// Draw the rect on the canvas
-		// 			if (BEAT_INFO.value != 0) {
-		// 				this.ele.minimapContext.fillRect(BEAT_INDEX * this.view.beatWidth * this.view.minimapScale, index * this.view.beatWidth * this.view.minimapScale, this.view.beatWidth * this.view.minimapScale, this.view.beatWidth * this.view.minimapScale);
-		// 			}
-		// 		}
-		// 	}
-		// 	index++;
-		// }
 	}
 }
 

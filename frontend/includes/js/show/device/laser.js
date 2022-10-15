@@ -14,14 +14,7 @@ laserInput.element = tired.html.create(`
 
 laserInput.elementParts = tired.html.parse(laserInput.element);
 laserInput.activate = function (beatX, beatY, beatBounds, device) {
-	// console.log("ACTIVATING THIS INPUT!");
-	// console.log(beatX);
-	// console.log(beatY);
-	// console.log(beatBounds);
-	// console.log(this);
-	// this.element.classList.toggle("hidden", false);
-	// this.element.style.left = `${beatBounds.x}px`;
-	// this.element.style.top = `${beatBounds.y}px`;
+	console.log("ACTIVATE THE LASER SELECT HERE!");
 }
 
 laserInput.render = function (device, value) {
