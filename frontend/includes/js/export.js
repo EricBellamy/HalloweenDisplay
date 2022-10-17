@@ -54,8 +54,36 @@ spiXfer(fd, 115200, message, NULL, 4);\n\n"
 	return result;
 }
 
+function verifyPoints(points){
+
+	let last_x = -1;
+	let last_y = -1;
+	let illegal_points = "";
+
+	for (let point of points){
+			if(last_x == -1 && last_y == -1){
+					last_x = point.x;
+					last_y = point.y;
+					continue;
+			}
+
+			let x_diff = Math.abs(last_x - point.x);
+			let y_diff = Math.abs(last_y - point.y);
+
+			if((x_diff == 0 || x_diff >= 3) && (y_diff == 0 || y_diff >= 3)) continue;
+			illegal_points += point.x +", "+point.y+" ";
+
+	}
+
+	if(illegal_points != "") alert("Illegal points found at: "+illegal_points);
+
+
+}
+
 button.addEventListener("click", function () {
 	console.log("Exporting...");
+
+	verifyPoints(points);
 
 	for (const point of points) {
 		console.log(point);
