@@ -1,4 +1,6 @@
 class LaserDisplayManager {
+	INTERPOLATION_FPS = 10;
+
 	downscaleFactor = 5;
 	CURRENT_COLOR = "";
 
@@ -27,7 +29,7 @@ class LaserDisplayManager {
 		});
 	}
 
-	drawLine(context, startX, startY, endX, endY, color = "ffffff", debug = false) {
+	drawLine(context, startX, startY, endX, endY, color = "ffffff", alpha = 1, debug = false) {
 		startX *= this.downscaleFactor;
 		startY *= this.downscaleFactor;
 		endX *= this.downscaleFactor;
@@ -38,6 +40,7 @@ class LaserDisplayManager {
 		// 	context.strokeStyle = `#${color}`;
 		// }
 
+		context.globalAlpha = alpha;
 		context.strokeStyle = `#${color}`;
 		context.beginPath();
 		context.moveTo(startX, startY);
@@ -63,6 +66,9 @@ class LaserDisplayManager {
 		}
 	}
 
+	getContext(name){
+		return this.canvases[name].context;
+	}
 	renderCanvas(name, laserDisplayName) {
 		const context = this.canvases[name].context;
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
@@ -110,6 +116,37 @@ class LaserDisplayManager {
 				y: parseInt(savedPoints[a * pointData + 2])
 			}, savedPoints[a * pointData], a));
 		}
+
+
+		// Generate the interpolation instructions here for the point set
+		newLaserDisplay.INTERPOLATION_STEPS = Math.floor(this.INTERPOLATION_FPS / newLaserDisplay.points.length) + 1;
+		newLaserDisplay.INTERPOLATION_FRAME = 0;
+		newLaserDisplay.INTERPOLATION_POINTS = [];
+		let currentPoint, nextPoint;
+		for(let a = 0; a < newLaserDisplay.points.length; a++){
+			currentPoint = newLaserDisplay.points[a];
+
+			// Loop back to beginning point at end
+			if(a != newLaserDisplay.points.length - 1) nextPoint = newLaserDisplay.points[a + 1];
+			else nextPoint = newLaserDisplay.points[0];
+
+			const xDiff = (nextPoint.x - currentPoint.x) / newLaserDisplay.INTERPOLATION_STEPS;
+			const yDiff = (nextPoint.y - currentPoint.y) / newLaserDisplay.INTERPOLATION_STEPS;
+			for(let step = 0; step < newLaserDisplay.INTERPOLATION_STEPS; step++){
+				newLaserDisplay.INTERPOLATION_POINTS.push({
+					x: currentPoint.x + xDiff * step,
+					y: currentPoint.y + yDiff * step,
+					hex: currentPoint.hex,
+					alpha: currentPoint.alpha
+				});
+			}
+			// console.log(currentPoint);
+			// console.log(nextPoint);
+			// if(a === 1) break;
+		}
+
+		window.LaserInterpolationManager.register(name, newLaserDisplay.points, newLaserDisplay.INTERPOLATION_POINTS);
+
 
 		this.designs[name] = newLaserDisplay;
 	}

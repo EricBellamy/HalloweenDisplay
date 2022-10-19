@@ -16,10 +16,15 @@ laserInput.activate = function (beatX, beatY, beatBounds, device) {
 }
 
 laserInput.render = function (device, value) {
-	window.laserDisplay.renderCanvas(device.name, value);
+	// window.laserDisplay.renderCanvas(device.name, value);
+
+	device.value = value;
+	window.LaserInterpolationManager.activate(device.name, value, window.laserDisplay.getContext(device.name));
 }
 laserInput.unRender = function(device){
-	window.laserDisplay.clearCanvas(device.name);
+	// window.laserDisplay.clearCanvas(device.name);
+
+	if(device.value) window.LaserInterpolationManager.deactivate(device.value);
 }
 
 document.body.appendChild(laserInput.element);

@@ -21,6 +21,8 @@
 #laserPopupWrapper {
 	padding: 1rem;
 	padding-top: 0;
+	width: 100%;
+	max-width: 600px;
 }
 .laser-popup-option {
 	width: 32.33%;
