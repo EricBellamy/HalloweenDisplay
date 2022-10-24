@@ -1,5 +1,5 @@
 global.__rootdir = __dirname;
-const distPath = `${__dirname}/../dist/`;
+const distPath = `${__dirname}/dist/`;
 
 const fs = require('fs-extra');
 const BUILD_DATA = {

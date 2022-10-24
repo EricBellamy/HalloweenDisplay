@@ -1,5 +1,5 @@
 {
-    "script": "frontend/build.js",
+    "script": "build.js",
     "watch": true,
     "ignore_watch": ["dist"],
     "watch_options": {

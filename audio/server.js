@@ -11,20 +11,20 @@ let fetcher = require('./audio.js');
 let bodyParser = require('body-parser')
 
 //let urlencodedParser = bodyParser.urlencoded({ extended: false })
-let urlencodedParser = bodyParser.json();
 
 // Enable cors
 app.use(cors());
+app.use(bodyParser.json());
 
 app.get('/', function(req, res){
-    res.sendFile("dist/index.html", {root: "../"});
-})
+    res.sendFile("frontend/dist/index.html", {root: "../"});
+});
 
-app.get('/dist/show.html', function(req, res){
-    res.sendFile("dist/show.html", {root: "../"});
-})
+app.get('/show.html', function(req, res){
+    res.sendFile("frontend/dist/show.html", {root: "../"});
+});
 
-app.post('/search', urlencodedParser, function (req, res) {
+app.post('/search', function (req, res) {
 
     fetcher.getSong(req.body.song, res, function(res){
         console.log("Sending response");
@@ -48,26 +48,26 @@ app.post('/search', urlencodedParser, function (req, res) {
     });
 });
 
-app.post('/save', urlencodedParser, function (req, res) {
+app.post('/save', function (req, res) {
 
     fs.writeFileSync("songs/"+req.body.show+"/instructions.json", JSON.stringify(req.body.instructions));
     res.sendStatus(200);
 
 });
 
-app.get('/song', urlencodedParser, function (req, res){
+app.get('/song', function (req, res){
 
     res.sendFile("songs/"+req.query.show+"/"+req.query.show+".mp3", {root: "./"});
 
 });
 
-app.get('/show', urlencodedParser, function (req, res){
+app.get('/show', function (req, res){
 
     res.send(JSON.parse(fs.readFileSync("songs/"+req.query.show+"/instructions.json")));
 
 });
 
-app.get('/metadata', urlencodedParser, function (req, res){
+app.get('/metadata', function (req, res){
 
     res.send(JSON.parse(fs.readFileSync("songs/"+req.query.show+"/metadata.json")));
 
