@@ -74,16 +74,10 @@ module.exports = {
 
                     let metadata = {
                         "filename": filename,
-                        "title": output.title,
+                        "title": filename.replace(".mp3", "").replace("download/", ""),
                         "channel": output.channel,
                         "duration": output.duration
                     }
-
-                    // console.log(__dirname+"/"+output.title+".mp3");
-                    // console.log(path.resolve(__dirname+"/"+output.title+".mp3"));
-                    // console.log(__dirname+"/Gimme\!\ Gimme\!\ Gimme\!\ \(A\ Man\ After\ Midnight\)\,\ performed\ by\ Victor\ Frankenstein\ ｜\ AAAH\!BBA.mp3");
-
-                    // Gimme! Gimme! Gimme! (A Man After Midnight), performed by Victor Frankenstein | AAAH!BBA.mp3
 
                     let data = fs.readFileSync(filename);
                     let context = new AudioContext();
