@@ -1,5 +1,6 @@
 class LaserDisplayManager {
 	INTERPOLATION_FPS = 10;
+	MAX_RGB_VALUE = 7;
 
 	downscaleFactor = 5;
 	CURRENT_COLOR = "";
@@ -115,6 +116,18 @@ class LaserDisplayManager {
 				x: parseInt(savedPoints[a * pointData + 1]),
 				y: parseInt(savedPoints[a * pointData + 2])
 			}, savedPoints[a * pointData], a));
+		}
+
+		// ["x-pos", "y-pos", "r", "g", "b"]
+		newLaserDisplay.instructions = {
+			r: [],
+			g: [],
+			b: []
+		}
+		for(const point of newLaserDisplay.points){
+			newLaserDisplay.instructions.r.push([point.x, point.y, this.MAX_RGB_VALUE, 0, 0]);
+			newLaserDisplay.instructions.g.push([point.x, point.y, 0, this.MAX_RGB_VALUE, 0]);
+			newLaserDisplay.instructions.b.push([point.x, point.y, 0, 0, this.MAX_RGB_VALUE]);
 		}
 
 

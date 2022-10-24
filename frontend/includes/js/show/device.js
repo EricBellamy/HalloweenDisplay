@@ -94,31 +94,29 @@ class DeviceManager {
 		this.inputs[name] = params;
 		return params;
 	}
-	addDevice(name, inputType, element, color = "79a8d0", rightClickZero = true) {
+	addDevice(name, inputType, element, color = "ffffff", params) {
 		if (this.inputs[inputType] === undefined) throw new Error("addDevice :: Not a valid input type");
 		if (!element) throw new Error("addDevice :: Element does not exist");
 		if (this.devices[name] === undefined) this.devices[name] = [];
 
 		element.classList.toggle("pointer", true);
-		element.addEventListener("click", function (event) {
-			event.stopPropagation();
-			selectDevice(this);
-		});
 
 		const id = this.devices[name].length + 1;
 		const newDevice = {
 			name: `${name}-${id}`,
 			id: id,
-			input: inputType,
+			input: this.inputs[inputType],
 			color: color,
 			element: element,
 			boxes: [],
-			rightClickZero: rightClickZero
+			params: params
 		};
 		this.devices[name].push(newDevice);
 		this.deviceList.push(newDevice);
 
 		this.count++;
+
+		return newDevice;
 	}
 }
 window.device = new DeviceManager();

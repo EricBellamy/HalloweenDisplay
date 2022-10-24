@@ -6,15 +6,11 @@
 	flex: 1;
 	margin-right: 4px;
 	background: #1b1c1d;
-	opacity: 0.8;
-}
-.laser:hover {
-	opacity: 1;
 }
 #lasers .laser:last-child {
 	margin-right: 0;
 }
-.laser div {
+.laser .laser-canvas {
 	position: relative;
 	padding-bottom: 100%;
 }
@@ -24,4 +20,28 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
+}
+.laser .laser-color-options {
+	display: flex;
+}
+.laser .laser-color-options .laser-color-option {
+	flex: 1;
+	padding: 5px 0;
+	text-align: center;
+	opacity: 0.2;
+}
+.laser .laser-color-options .laser-color-option.active {
+	opacity: 1;
+}
+.laser .laser-color-options .laser-color-option.red {
+	color: #f00;
+	background: #ff000033;
+}
+.laser .laser-color-options .laser-color-option.green {
+	color: #0f0;
+	background: #00ff0033;
+}
+.laser .laser-color-options .laser-color-option.blue {
+	color: #04f;
+	background: #0000ff33;
 }

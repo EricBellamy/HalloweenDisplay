@@ -284,7 +284,7 @@ class Timeline {
 	}
 	toggleInputLogic(x, y, bounds) {
 		const targetDevice = window.device.findAt(y);
-		const input = window.device.getInput(targetDevice.input);
+		const input = targetDevice.input;
 		window.device.setCurrent(input);
 
 		input.current.x = x;
@@ -355,7 +355,10 @@ class Timeline {
 		this.render();
 	}
 
-	updateBeatDisplayElement(beatIndex, device, value) {
+	updateBeatDisplayElement(beatIndex, eventInfo) {
+		const device = eventInfo.device;
+		const value = eventInfo.value;
+
 		// This function either generates a new element for the given position
 		// Or updates the position of the existing element
 		const key = beatIndex + "-" + device.name;
@@ -368,33 +371,36 @@ class Timeline {
 			console.log(beatIndex);
 			console.log(value);
 		} else {
-			const newElement = tired.html.create(`<div class="beat"><div>${value}</div></div>`);
+			let newElement;
+			if (device.input.timelineElement) newElement = device.input.timelineElement(value, device);
+			else newElement = tired.html.create(`<div class="beat"><div>${value}</div></div>`);
+
 			const beatBounds = device.boxes[relativeBeatIndex].bounds;
 			newElement.style.top = beatBounds.y + "px";
 			newElement.style.left = beatBounds.x + "px";
 			newElement.style.background = `#${device.color}`;
 			newElement.style.opacity = `${((value - value % 10) / 100) * 0.75 + 0.25}`;
 
+			if (device.input.timelineElementStyles) device.input.timelineElementStyles(newElement, value, device, eventInfo);
+
 			newElement.addEventListener("click", function (clickedBeat) {
 				this.toggleInput(clickedBeat.dataset.x, clickedBeat.dataset.y, clickedBeat.bounds);
 			}.bind(this, device.boxes[relativeBeatIndex]));
 
 			// Add the ability to right click and create a new event with value 0
-			if (device.rightClickZero) {
-				newElement.addEventListener('contextmenu', function (clickedBeat, clickedValue, ev) {
-					if (clickedValue != 0) {
-						// Make it seem like the user input this value
-						const input = this.toggleInputLogic(clickedBeat.dataset.x, clickedBeat.dataset.y, clickedBeat.bounds);
-						input.setValue(0);
+			newElement.addEventListener('contextmenu', function (clickedBeat, clickedValue, ev) {
+				if (clickedValue != 0) {
+					// Make it seem like the user input this value
+					const input = this.toggleInputLogic(clickedBeat.dataset.x, clickedBeat.dataset.y, clickedBeat.bounds);
+					input.setValue(0);
 
-						// Add the event to the timeline
-						this.addEvent(0);
-					}
+					// Add the event to the timeline
+					this.addEvent(0);
+				}
 
-					ev.preventDefault();
-					return false;
-				}.bind(this, device.boxes[relativeBeatIndex], value), false);
-			}
+				ev.preventDefault();
+				return false;
+			}.bind(this, device.boxes[relativeBeatIndex], value), false);
 
 			this.timelineElements[key] = {
 				beatIndex: beatIndex,
@@ -501,10 +507,9 @@ class Timeline {
 					// Activate the device
 					if (currentViewIndex - (currentKey + b) === 0) {
 						RENDERED_DEVICES.push(eventInfo.device.name);
-						const input = window.device.getInput(eventInfo.device.input);
-						input.render(eventInfo.device, eventInfo.value);
+						eventInfo.device.input.render(eventInfo.device, eventInfo.value);
 					}
-					this.updateBeatDisplayElement(currentKey + b, eventInfo.device, eventInfo.value);
+					this.updateBeatDisplayElement(currentKey + b, eventInfo);
 				}
 			}
 		}
@@ -515,12 +520,9 @@ class Timeline {
 		const DEVICE_LIST = window.device.deviceList;
 		for (const DEVICE of DEVICE_LIST) {
 			if (RENDERED_DEVICES.indexOf(DEVICE.name) === -1) {
-				const input = window.device.getInput(DEVICE.input);
-				input.unRender(DEVICE);
+				DEVICE.input.unRender(DEVICE);
 			}
 		}
-
-
 
 		this.renderMinimap();
 	}
@@ -596,6 +598,12 @@ class Timeline {
 				);
 			}
 		}
+	}
+
+	getCurrentEventForDevice(deviceName){
+		const targetEvents = this.events[this.view.index];
+		if(targetEvents) if(targetEvents[deviceName]) return this.events[this.view.index][deviceName];
+		return false;
 	}
 }
 

@@ -1,0 +1,23 @@
+{
+    "song": "path/to/song.mp3",
+    "timestamps": {
+        "0": {
+            "laser-1": {
+                "points": [
+                    ["x-pos", "y-pos", "r", "g", "b"],
+                    ["x-pos", "y-pos", "r", "g", "b"]
+                ],
+                "config": {
+                    "home": true,
+                    "speed-profile": 1
+                }
+            },
+            "light-1": 1.0
+        },
+        "1000": {
+            "laser-1": 0,
+            "light-1": 0,
+            "fog-1": 0.6
+        }
+    }
+}

@@ -38,8 +38,7 @@ class LaserInterpolationManager {
 			points,
 			len: points.length,
 			interpolation_points,
-			interpolation_len: interpolation_points.length,
-			frame: 0
+			interpolation_len: interpolation_points.length
 		};
 	}
 	ACTIVE = [];
@@ -49,7 +48,8 @@ class LaserInterpolationManager {
 				this.ACTIVE[a] = {
 					...this.REGISTERED[id],
 					deviceName,
-					context
+					context,
+					frame: this.ACTIVE[a].frame
 				};
 				return;
 			};
@@ -57,12 +57,13 @@ class LaserInterpolationManager {
 		this.ACTIVE.push({
 			...this.REGISTERED[id],
 			deviceName,
-			context
+			context,
+			frame: 0
 		});
 	}
-	deactivate(id) {
+	deactivate(deviceName) {
 		for (let a = 0; a < this.ACTIVE.length; a++) {
-			if (this.ACTIVE[a].id === id) {
+			if (this.ACTIVE[a].deviceName === deviceName) {
 				this.ACTIVE[a].context.clearRect(0, 0, this.ACTIVE[a].context.canvas.width, this.ACTIVE[a].context.canvas.height);
 				return this.ACTIVE.splice(a, 1);
 			}
