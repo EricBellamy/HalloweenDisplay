@@ -57,7 +57,7 @@ app.post('/save', urlencodedParser, function (req, res) {
 
 app.get('/song', urlencodedParser, function (req, res){
 
-
+    res.sendFile("songs/"+req.query.show+"/"+req.query.show+".mp3", {root: "./"});
 
 });
 
@@ -67,7 +67,7 @@ app.get('/show', urlencodedParser, function (req, res){
 
 });
 
-app.get('metadata', urlencodedParser, function (req, res){
+app.get('/metadata', urlencodedParser, function (req, res){
 
     res.send(JSON.parse(fs.readFileSync("songs/"+req.query.show+"/metadata.json")));
 
