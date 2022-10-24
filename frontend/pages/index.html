@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <include src="head.html" title="Halloween Show Editor" description="Edit lights and lasers for a song display" />
+</head>
+
+<body>
+    <input id="youtubeUrlInput" type="text" placeholder="Youtube URL" />
+    <button id="submit">Submit</button>
+    <script>
+        const POST_ENDPOINT = "http://localhost:3000/search";
+
+        document.querySelector("#submit").addEventListener("click", async function(){
+            const urlValue = document.querySelector("#youtubeUrlInput").value;
+            console.log(urlValue);
+            tired.xhr.post(POST_ENDPOINT, { song: urlValue }, (data) => {
+                console.log(data);
+                window.location.href = 'dist/show.html?show='+data.title;
+            });
+
+        });
+    </script>
+</body>
+
+</html>

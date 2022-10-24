@@ -4,3 +4,4 @@ node_modules
 todo.md
 server/main.js
 dist/
+audio/songs/
