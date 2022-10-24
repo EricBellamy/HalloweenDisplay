@@ -42,13 +42,14 @@ class LaserInterpolationManager {
 		};
 	}
 	ACTIVE = [];
-	activate(deviceName, id, context) {
+	activate(deviceName, id, hex, context) {
 		for (let a = 0; a < this.ACTIVE.length; a++) {
 			if (this.ACTIVE[a].deviceName === deviceName) {
 				this.ACTIVE[a] = {
 					...this.REGISTERED[id],
 					deviceName,
 					context,
+					hex,
 					frame: this.ACTIVE[a].frame
 				};
 				return;
@@ -58,6 +59,7 @@ class LaserInterpolationManager {
 			...this.REGISTERED[id],
 			deviceName,
 			context,
+			hex,
 			frame: 0
 		});
 	}
@@ -88,12 +90,12 @@ class LaserInterpolationManager {
 				hasDrawn = false
 				for(let c = 0; c < interLenFraction; c++){
 					if((interLen + (interpolation.frame - c)) % interLen === b || b === (interpolation.frame + c) % interpolation.interpolation_len){
-						window.laserDisplay.drawLine(context, currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y, currentPoint.hex, 1);
+						window.laserDisplay.drawLine(context, currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y, interpolation.hex, 1);
 						hasDrawn = true;
 						break;
 					}
 				}
-				if(!hasDrawn) window.laserDisplay.drawLine(context, currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y, currentPoint.hex, 0.6);
+				if(!hasDrawn) window.laserDisplay.drawLine(context, currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y, interpolation.hex, 0.6);
 			}
 			interpolation.frame = (interpolation.frame + 1) % interpolation.interpolation_len;
 		}

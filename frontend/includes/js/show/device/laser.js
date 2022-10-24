@@ -6,7 +6,7 @@ laserInput.timelineElement = function (value) {
 	return tired.html.create(`<div class="beat"><div>${value.value}</div></div>`);
 }
 laserInput.timelineElementStyles = function(element, value, device){
-	element.style.background = device.params.colorOptions[value.color].dataset.hex;
+	element.style.background = "#" + device.params.colorOptions[value.colorIndex].dataset.hex;
 }
 laserInput.deactivate = function (close = false) {
 	this.element.classList.toggle("hidden", true);
@@ -14,10 +14,12 @@ laserInput.deactivate = function (close = false) {
 	// If we just need to close this window
 	if (close) return;
 
+	const params = laserInput.current.device.params;
 	// Create / Update the event here
 	window.timeline.addEvent({
 		value: laserInput.current.value,
-		color: laserInput.current.device.params.color
+		colorIndex: params.colorIndex,
+		hex: params.colorOptions[params.colorIndex].dataset.hex
 	});
 }
 laserInput.activate = function (beatX, beatY, beatBounds, device) {
@@ -25,14 +27,10 @@ laserInput.activate = function (beatX, beatY, beatBounds, device) {
 }
 
 laserInput.render = function (device, value) {
-	// window.laserDisplay.renderCanvas(device.name, value);
-
 	device.value = value.value;
-	window.LaserInterpolationManager.activate(device.name, value.value, window.laserDisplay.getContext(device.name));
+	window.LaserInterpolationManager.activate(device.name, value.value, value.hex, window.laserDisplay.getContext(device.name));
 }
 laserInput.unRender = function (device) {
-	// window.laserDisplay.clearCanvas(device.name);
-
 	if (device.value) window.LaserInterpolationManager.deactivate(device.name);
 }
 
@@ -45,21 +43,26 @@ function addLaserDevice(elementId){
 	const laserEle = document.querySelector(elementId);
 	const laserEleOptions = laserEle.querySelectorAll(".laser-color-option");
 
-	const newLaserDevice = window.device.addDevice("laser", "laserPopup", laserEle, "79a8d0", { color: 0, colorOptions: laserEleOptions });
+	const newLaserDevice = window.device.addDevice("laser", "laserPopup", laserEle, "79a8d0", { colorIndex: 0, colorOptions: laserEleOptions });
 
 	for(const option of laserEleOptions){
 		option.laserEle = laserEle;
 		option.laserDevice = newLaserDevice;
 		option.addEventListener("click", function(){
 			const params = this.laserDevice.params;
-			params.colorOptions[params.color].classList.toggle("active", false);
+			params.colorOptions[params.colorIndex].classList.toggle("active", false);
 
-			const colorIndex = parseInt(this.dataset.color);
-			params.color = colorIndex;
+			// device.params.colorOptions[value.colorIndex].dataset.hex
+
+			const colorIndex = parseInt(this.dataset.colorindex);
+			params.colorIndex = colorIndex;
 			this.classList.toggle("active", true);
 
 			const currentEvent = window.timeline.getCurrentEventForDevice(this.laserDevice.name);
-			currentEvent.value.color = colorIndex;
+			if(currentEvent) {
+				currentEvent.value.hex = params.colorOptions[params.colorIndex].dataset.hex;
+				currentEvent.value.colorIndex = colorIndex;
+			}
 
 			window.timeline.render();
 		});
