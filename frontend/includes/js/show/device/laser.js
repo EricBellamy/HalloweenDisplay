@@ -39,8 +39,8 @@ window.popups.laserPopup = laserInput;
 
 
 
-function addLaserDevice(elementId){
-	const laserEle = document.querySelector(elementId);
+function addLaserDevice(elementTag){
+	const laserEle = document.querySelector("#" + elementTag);
 	const laserEleOptions = laserEle.querySelectorAll(".laser-color-option");
 
 	const newLaserDevice = window.device.addDevice("laser", "laserPopup", laserEle, "79a8d0", { colorIndex: 0, colorOptions: laserEleOptions });
@@ -67,17 +67,15 @@ function addLaserDevice(elementId){
 			window.timeline.render();
 		});
 	}
+
+	// Register the canvas
+	window.laserDisplay.registerCanvas(elementTag, document.querySelector(`#${elementTag}-canvas`));
 }
 
 // Register the lasers
-addLaserDevice("#laser-1");
-addLaserDevice("#laser-2");
-addLaserDevice("#laser-3");
-
-// Register the canvases
-window.laserDisplay.registerCanvas("laser-1", document.querySelector("#laser-1-canvas"));
-window.laserDisplay.registerCanvas("laser-2", document.querySelector("#laser-2-canvas"));
-window.laserDisplay.registerCanvas("laser-3", document.querySelector("#laser-3-canvas"));
+addLaserDevice("laser-1");
+addLaserDevice("laser-2");
+addLaserDevice("laser-3");
 
 // Register the designs
 window.laserDisplay.registerDesign("shuriken", "http://localhost:3000/points.html?points=0f0%2C30%2C18%2C0f0%2C60%2C0%2C00f%2C42%2C30%2C00f%2C60%2C60%2Cff0%2C30%2C42%2Cff0%2C0%2C60%2Cf00%2C18%2C30%2Cf00%2C0%2C0");
