@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<include src="head.html" title="Halloween Show Editor" description="Edit lights and lasers for a song display" />
+
+	<include src="show/display.css" />
+	<include src="show/timeline.css" />
+	<include src="show/icons.css" />
+</head>
+
+<body>
+	<div id="ShowVertContainer">
+		<div id="ShowHorzContainer">
+			<div id="display">
+				<include src="show/popups.css" />
+
+				<include src="show/lasers.html" />
+				<include src="show/lights.html" />
+			</div>
+			<div id="minimapContainer">
+				<div id="minimapWindow"></div>
+				<canvas id="minimap"></canvas>
+			</div>
+			<div id="timeline">
+				<div id="timelineSidebar">
+					
+				</div>
+				<div id="timelineContent">
+					<div id="timelineEvents"></div>
+					<div id="timelineBackground"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<include src="show/metadata.js" />
+	<include src="show/device.js" />
+	<include src="show/timeline.js" />
+
+	<!-- Usage Functions -->
+	<script>
+		window.popups = {};
+	</script>
+	<include src="show/laser-interpolations.js" />
+	<include src="show/laser-display.js" />
+	<include src="show/device/laser.js" />
+	<include src="show/device/light.js" />
+
+	<include src="show/hotkeys.js" />
+
+	<!-- Device initialization -->
+	<script>
+		window.timeline.init();
+		window.timeline.initSong();
+		window.timeline.render();
+
+		window.timeline.highlightBeat(0);
+	</script>
+
+	<!-- Display Setup -->
+	<script>
+
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+body {
+	background: #000;
+	color: #fff;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+body.delete {
+	cursor: url("https://i.stack.imgur.com/bUGV0.png"), auto;
+}
+
+#container {
+	padding: 20px;
+	display: flex;
+	justify-content: center;
+}
+
+
+/* Left Column */
+#canvas {
+	background: #111;
+	cursor: none;
+}
+#left .header {
+	padding: 20px 0;
+}
+
+
+/* Right column */
+#right {
+	padding-left: 40px;
+	min-width: 280px;
+}
+#right .header {
+	display: flex;
+}
+#right .header .label {
+	margin-right: auto;
+	padding: 20px 0;
+}
+#right .header #exportContainer {
+	padding: 10px 0;
+}
+#right .header #export {
+	cursor: pointer;
+	padding: 10px 20px;
+}
+#right .header #export:hover {
+	background: #ffffff22;
+}
+
+.point {
+	display: flex;
+	position: relative;
+	margin-bottom: 10px;
+}
+
+.point .coord {
+	padding: 20px 0 20px 20px;
+}
+
+.point .hex {
+	letter-spacing: 8px;
+	outline: none;
+	border: none;
+	background: none;
+	width: 160px;
+	padding: 20px;
+
+	color: #fff;
+}
+
+.point .background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+	opacity: 0.2;
+
+	background: #fff;
+}
+
+.point .controls {
+	position: absolute;
+	top: 50%;
+	right: 100%;
+	padding-right: 4px;
+	transform: translate(0, -50%);
+
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	opacity: 0;
+}
+.point:hover .controls {
+	opacity: 1;
+}
+.point .controls .icon {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.point .controls .icon:hover {
+	cursor: pointer;
+	background: #ffffff33;
+}

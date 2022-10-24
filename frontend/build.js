@@ -2,11 +2,6 @@ global.__rootdir = __dirname;
 const distPath = `${__dirname}/../dist/`;
 
 const fs = require('fs-extra');
-const DATA_TYPES = Object.freeze({
-	BLOG: "blog",
-	DRINK_COLLECTION: "drinks",
-	RECIPE: "recipe"
-});
 const BUILD_DATA = {
 	// recipe: []
 	updated: {}

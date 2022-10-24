@@ -1,0 +1,32 @@
+body {
+	background: #28282f;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.pointer {
+	cursor: pointer;
+}
+
+#ShowVertContainer {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	/* justify-content: center; */
+}
+
+#ShowHorzContainer {
+	height: 100%;
+
+	width: 100%;
+	max-width: 800px;
+	margin: 0 auto;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	padding: 20px;
+}
+
+.hidden {
+	display: none !important;
+}
