@@ -2,7 +2,7 @@
   "name": "AidanHalloween",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "build.js",
   "scripts": {
     "start": "pm2 start pm2.json"
   },
