@@ -9,7 +9,7 @@ window.tired.xhr = {
 				console.error(`[TIRED.XHR] 404 loading: ${url}`);
 				callback(404);
 			} else {
-				callback(null, xhr.response);
+				callback(null, xhr.response, xhr.status);
 			}
 		});
 		xhr.addEventListener('error', function () {

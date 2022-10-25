@@ -24,7 +24,7 @@
 			</div>
 			<div id="timeline">
 				<div id="timelineSidebar">
-					
+
 				</div>
 				<div id="timelineContent">
 					<div id="timelineEvents"></div>
@@ -34,7 +34,6 @@
 		</div>
 	</div>
 
-	<include src="show/metadata.js" />
 	<include src="show/device.js" />
 	<include src="show/timeline.js" />
 
@@ -42,6 +41,9 @@
 	<script>
 		window.popups = {};
 	</script>
+
+	<include src="show/animation-loop.js" />
+
 	<include src="show/laser-interpolations.js" />
 	<include src="show/laser-display.js" />
 	<include src="show/device/laser.js" />
@@ -52,10 +54,21 @@
 	<!-- Device initialization -->
 	<script>
 		window.timeline.init();
-		window.timeline.initSong();
 		window.timeline.render();
 
-		window.timeline.highlightBeat(0);
+		function initTimeline() {
+			window.timeline.initSong();
+			window.timeline.render();
+
+			window.timeline.highlightBeat(0);
+		}
+	</script>
+
+	<include src="show/audio-manager.js" />
+	<include src="show/load-show-data.js" />
+
+	<script>
+
 	</script>
 
 	<!-- Display Setup -->

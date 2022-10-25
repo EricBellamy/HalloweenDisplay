@@ -23,6 +23,9 @@ app.get('/', function(req, res){
 app.get('/show.html', function(req, res){
     res.sendFile("frontend/dist/show.html", {root: "../"});
 });
+app.get('/points.html', function(req, res){
+    res.sendFile("frontend/dist/points.html", {root: "../"});
+});
 
 app.post('/search', function (req, res) {
 
@@ -55,22 +58,16 @@ app.post('/save', function (req, res) {
 
 });
 
-app.get('/song', function (req, res){
-
+app.get('/mp3', function (req, res){
     res.sendFile("songs/"+req.query.show+"/"+req.query.show+".mp3", {root: "./"});
-
 });
 
-app.get('/show', function (req, res){
-
+app.get('/instructions', function (req, res){
     res.send(JSON.parse(fs.readFileSync("songs/"+req.query.show+"/instructions.json")));
-
 });
 
 app.get('/metadata', function (req, res){
-
     res.send(JSON.parse(fs.readFileSync("songs/"+req.query.show+"/metadata.json")));
-
 });
 
 console.log(`Listening on ${SERVER_PORT}...`);

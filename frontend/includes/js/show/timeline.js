@@ -2,17 +2,17 @@ class Timeline {
 	selected = undefined;
 	view = {
 		hightlightIndex: 0,
-		index: 0, // The index of the first beat shown on the timeline
+		index: 10, // The index of the first beat shown on the timeline
 		max: 20, // The max beats that can be shown
 		bpmScale: 2, // How many beats per beat
 		minimapFps: 60,
 		minimapScale: 2
 	};
 	SONG = {
-		"Title": "Gimme! Gimme! Gimme! (A Man After Midnight), performed by Victor Frankenstein | AAAH!BBA",
-		"Channel": "brian david gilbert",
-		"Duration": 225,
-		"Tempo": 108.347,
+		"title": "Gimme! Gimme! Gimme! (A Man After Midnight), performed by Victor Frankenstein | AAAH!BBA",
+		"channel": "brian david gilbert",
+		"duration": 225,
+		"tempo": 108.347,
 		count: 407
 	};
 	SAVE = {
@@ -226,13 +226,13 @@ class Timeline {
 	}
 
 	initSong() {
-		const Beats = window.meta.Beats;
-		const BeatTime = 60 / parseInt(window.meta.Tempo);
+		const Beats = this.SONG.beats;
+		const BeatTime = 60 / parseInt(this.SONG.tempo);
 		for (let a = 0; a < Beats.length; a++) {
 			Beats[a] = (Math.round((Beats[a] / BeatTime) * 2) / 2);
 		};
 
-		this.SONG.count = Math.ceil((this.SONG.Duration / 60) * this.SONG.Tempo);
+		this.SONG.count = Math.ceil((this.SONG.duration / 60) * this.SONG.tempo);
 	}
 
 
@@ -298,7 +298,7 @@ class Timeline {
 	getTimestampFromBeatIndex(index) {
 		// Calculate timestamp using BPM & Beat Index
 		return Math.round(
-			(((60 / this.SONG.Tempo) * index) / this.view.bpmScale) * 1000
+			(((60 / this.SONG.tempo) * index) / this.view.bpmScale) * 1000
 		);
 
 		// return 
@@ -590,12 +590,14 @@ class Timeline {
 		for (const DEVICE_KEY in DEVICE_VALUE_INFO) {
 			targetDeviceInfo = DEVICE_VALUE_INFO[DEVICE_KEY];
 			if (targetDeviceInfo.startingBeat != undefined) {
-				this.drawMinimapRect(
-					targetDeviceInfo.index,
-					targetDeviceInfo.startingBeat,
-					this.SONG.count - 1,
-					targetDeviceInfo.device.color
-				);
+				if(targetDeviceInfo.value != 0){
+					this.drawMinimapRect(
+						targetDeviceInfo.index,
+						targetDeviceInfo.startingBeat,
+						this.SONG.count - 1,
+						targetDeviceInfo.device.color
+					);
+				}
 			}
 		}
 	}
@@ -604,6 +606,10 @@ class Timeline {
 		const targetEvents = this.events[this.view.index];
 		if(targetEvents) if(targetEvents[deviceName]) return this.events[this.view.index][deviceName];
 		return false;
+	}
+
+	loadFromInstructions(instructions){
+		// Load the events from the instructions provided
 	}
 }
 

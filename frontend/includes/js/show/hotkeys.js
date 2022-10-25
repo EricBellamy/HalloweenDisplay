@@ -12,3 +12,12 @@ document.addEventListener("keydown", function (event) {
 			break;
 	}
 });
+document.addEventListener("keypress", function (event) {
+	console.log(event);
+	switch (event.key) {
+		case " ":
+			// Play audio for given frame
+			window.audio.playRange();
+			break;
+	}
+});
