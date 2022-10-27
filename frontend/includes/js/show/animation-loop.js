@@ -13,7 +13,7 @@ class AnimationManager {
 		this.start = this.start.bind(this);
 		this.run = this.run.bind(this);
 
-		this.renderFrameMinimum = 1000 / this.renderFps;
+		this.updateTickSpeed(60);
 	}
 	start() {
 		if (!this.state) {
@@ -24,11 +24,9 @@ class AnimationManager {
 	stop() {
 		this.state = false;
 	}
-	updateTickSpeed(frameType, newTicksPerSecond) {
-		if (this[`${frameType}FrameMinimum`] != undefined) {
-			this[`${frameType}Fps`] = newTicksPerSecond;
-			this[`${frameType}FrameMinimum`] = 1000 / newTicksPerSecond;
-		}
+	updateTickSpeed(newTicksPerSecond) {
+		this.renderFps = newTicksPerSecond;
+		this.renderFrameMinimum = Math.floor(1000 / newTicksPerSecond);
 	}
 
 	RENDER_CALLBACKS = [];
@@ -49,10 +47,9 @@ class AnimationManager {
 		this.renderFrameTime += frameTime;
 
 		if (this.renderFrameMinimum < this.renderFrameTime) {
-			this.renderFrameTime = 0;
-
 			// Render interpolations here
-			this.render(frameTime);	
+			this.render(this.renderFrameTime);
+			this.renderFrameTime = 0;
 		}
 
 		if (this.state) {

@@ -13,11 +13,19 @@ document.addEventListener("keydown", function (event) {
 	}
 });
 document.addEventListener("keypress", function (event) {
-	console.log(event);
 	switch (event.key) {
+		case "p":
+			window.audio.stop();
+			if(window.audio.isPaused()){
+				window.timeline.view.index = 0;
+				window.audio.playRange(window.timeline.SONG.beatCount);
+				window.timeline.render();
+			}
+			break;
 		case " ":
 			// Play audio for given frame
-			window.audio.playRange();
+			if(window.audio.isPaused()) window.audio.playRange(window.timeline.view.max);
+			else window.audio.stop();
 			break;
 	}
 });

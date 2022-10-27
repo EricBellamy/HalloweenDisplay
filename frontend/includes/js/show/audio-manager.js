@@ -1,13 +1,16 @@
 class AudioManager {
 	audio;
 
+	currentBeatIndex = -1;
+
+
 	// Beat Index
-	start = 0;
-	stop = 0; 
+	startBeat = 0;
+	stopBeat = 0; 
 
 	// Beat Index Timestamps
-	startTime = 0;
-	endTime = 0;
+	startBeatTime = 0;
+	stopBeatTime = 0;
 	remainingTimeMs = 0;
 
 	constructor(audio) {
@@ -22,7 +25,15 @@ class AudioManager {
 		return this.audio.duration;
 	}
 	calculateBeatTimestamp(beatIndex) {
-		return (beatIndex / (window.timeline.SONG.tempo * window.timeline.view.bpmScale)) * 60;
+		return (beatIndex / (window.timeline.SONG.scaledTempo)) * 60;
+	}
+	calculateBeatIndexFromTimestamp(){
+		const timestamp = this.audio.currentTime;
+		
+		return Math.floor((timestamp / 60) * window.timeline.SONG.scaledTempo);
+	}
+	isPaused(){
+		return this.audio.paused;
 	}
 
 
@@ -31,28 +42,39 @@ class AudioManager {
 		if(!this.audio.paused){
 			this.remainingTimeMs -= frameTime;
 
-			console.log(this.remainingTimeMs);
+			const beatIndex = this.calculateBeatIndexFromTimestamp();
+
+			if(beatIndex != this.currentBeatIndex){
+				this.currentBeatIndex = beatIndex;
+				window.timeline.highlightBeat(beatIndex - window.timeline.view.index);
+
+			}
+
 			if(this.remainingTimeMs <= 0){
 				this.audio.pause();
 			}
 		}
 	}
 
-
-	playRange() {
+	stop(){
+		this.startBeat = 0;
+		this.startBeatTime = 0;
+		this.stopBeat = 0;
+		this.stopBeatTime = 0;
+		this.remainingTimeMs = 0;
+		this.audio.pause();
+	}
+	playRange(maxBeats, scrollHighlighterWithAudio = false) {
 		// window.timeline.SONG.tempo --> The beats per minute
 		// window.timeline.SONG.duration --> The duration in seconds
-		// console.log((window.timeline.SONG.duration / 60) * window.timeline.SONG.tempo);
-		console.log(window.timeline.SONG);
-		// console.log(window.timeline.view.bpmScale);
-		this.start = window.timeline.view.index;
-		this.stop = this.start + window.timeline.view.max;
+		this.startBeat = window.timeline.view.index;
+		this.stopBeat = this.startBeat + maxBeats;
 
-		this.startTime = this.calculateBeatTimestamp(this.start);
-		this.stopTime = this.calculateBeatTimestamp(this.stop);
-		this.remainingTimeMs =  (this.stopTime - this.startTime) * 1000;
+		this.startBeatTime = this.calculateBeatTimestamp(this.startBeat);
+		this.stopBeatTime = this.calculateBeatTimestamp(this.stopBeat);
+		this.remainingTimeMs =  (this.stopBeatTime - this.startBeatTime) * 1000;
 
-		this.audio.currentTime = this.startTime;
+		this.audio.currentTime = this.startBeatTime;
 		this.audio.play();
 	}
 	pause() {
