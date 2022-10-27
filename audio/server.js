@@ -58,6 +58,13 @@ app.post('/save', function (req, res) {
 
 });
 
+app.post('/metadata', function(req, res){
+
+    fs.writeFileSync("songs/"+req.body.show+"/metadata.json", JSON.stringify(req.body.metadata));
+    res.send(JSON.parse(fs.readFileSync("songs/"+req.body.show+"/metadata.json")));
+
+});
+
 app.get('/mp3', function (req, res){
     res.sendFile("songs/"+req.query.show+"/"+req.query.show+".mp3", {root: "./"});
 });
