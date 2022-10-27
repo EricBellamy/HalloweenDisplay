@@ -53,7 +53,7 @@ app.post('/search', function (req, res) {
 
 app.post('/save', function (req, res) {
 
-    fs.writeFileSync("songs/"+req.body.show+"/instructions.json", JSON.stringify(req.body.instructions));
+    fs.writeFileSync("songs/"+req.body.show+"/instructions-"+req.body.version+".json", JSON.stringify(req.body.instructions));
     res.sendStatus(200);
 
 });
@@ -70,7 +70,7 @@ app.get('/mp3', function (req, res){
 });
 
 app.get('/instructions', function (req, res){
-    res.send(JSON.parse(fs.readFileSync("songs/"+req.query.show+"/instructions.json")));
+    res.send(JSON.parse(fs.readFileSync("songs/"+req.query.show+"/instructions-"+req.query.version+".json")));
 });
 
 app.get('/metadata', function (req, res){
