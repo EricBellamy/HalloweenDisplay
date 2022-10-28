@@ -3,6 +3,7 @@
 
 <head>
     <include src="head.html" title="Halloween Show Editor" description="Edit lights and lasers for a song display" />
+    <include src="show/music-tempo/music-tempo.min.js" />
 </head>
 
 <body>
@@ -16,7 +17,56 @@
             console.log(urlValue);
             tired.xhr.post(POST_ENDPOINT, { song: urlValue }, (data) => {
                 console.log(data);
-                window.location.href = '/show.html?show='+data.title;
+
+                let songSrc = "/mp3?show=" + data.title;
+
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', songSrc);
+                xhr.responseType = 'blob';
+                xhr.onload = async function (e) {
+                    let fileReader = new FileReader();
+                    fileReader.onloadend = () => {
+                        var context = new AudioContext();
+                        context.decodeAudioData(fileReader.result, function (buffer) {
+                            var audioData = [];
+                            // Take the average of the two channels
+                            if (buffer.numberOfChannels == 2) {
+                                let channel1Data = buffer.getChannelData(0);
+                                let channel2Data = buffer.getChannelData(1);
+                                let length = channel1Data.length;
+                                for (var i = 0; i < length; i++) {
+                                    audioData[i] = (channel1Data[i] + channel2Data[i]) / 2;
+                                }
+                            } else {
+                                audioData = buffer.getChannelData(0);
+                            }
+                            const MUSIC_TEMPO = new MusicTempo(audioData);
+
+                            const MUSIC_TEMPO_OUTPUT = {
+                            beats: MUSIC_TEMPO.beats,
+                            beatInterval: MUSIC_TEMPO.beatInterval,
+                            tempo: parseFloat(MUSIC_TEMPO.tempo),
+                            beats: MUSIC_TEMPO.beats,
+                            }
+
+                            console.log(MUSIC_TEMPO_OUTPUT);
+
+                            data["tempo"] = MUSIC_TEMPO_OUTPUT.tempo;
+                            data["beats"] = MUSIC_TEMPO_OUTPUT.beats;
+
+                            tired.xhr.post("metadata", { "metadata": data, "show": data.title }, (metadata) => {
+
+                                console.log(metadata);
+                                window.location.href = '/show.html?show='+data.title;
+
+                            });
+
+                            // POST THE MT VARIABLE TO THE SERVER AND THEN REDIRECT NOW ON RESPONSE
+                        });
+                    }
+                    fileReader.readAsArrayBuffer(xhr.response);
+                }
+                xhr.send();
             });
 
         });

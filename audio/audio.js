@@ -79,6 +79,10 @@ module.exports = {
                         "duration": output.duration
                     }
 
+                    fs.writeFileSync("download/metadata.json", JSON.stringify(metadata));
+                    callback(res);
+
+                    /*
                     let data = fs.readFileSync(filename);
                     let context = new AudioContext();
                     context.decodeAudioData(data, function(buffer){
@@ -93,6 +97,7 @@ module.exports = {
                         callback(res);
 
                     });
+                    */
 
                 }
             });
