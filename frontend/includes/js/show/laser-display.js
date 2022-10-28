@@ -91,7 +91,13 @@ class LaserDisplayManager {
 		};
 	}
 
-	registerDesign(name, URL) {
+	registerDesign(name, designConfig, URL) {
+		// Support 2 arguments only
+		if(typeof designConfig === "string") {
+			URL = designConfig;
+			designConfig = {};
+		}
+
 		const newOptionElement = tired.html.create(`<div class="laser-popup-option" data-value="${name}">${name}</div>`);
 		newOptionElement.addEventListener("click", function () {
 			laserInput.setValue(this.dataset.value);
