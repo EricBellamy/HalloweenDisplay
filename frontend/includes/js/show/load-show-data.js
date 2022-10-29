@@ -557,6 +557,11 @@ async function loadShowData() {
 		});
 	});
 
+	for(const LASER_DESIGN_KEY in window.LASER_DESIGNS){
+		const LASER_DESIGN = window.LASER_DESIGNS[LASER_DESIGN_KEY];
+		window.laserDisplay.registerDesign(LASER_DESIGN_KEY, LASER_DESIGN[0], LASER_DESIGN[1]);
+	}
+
 	window.timeline.SONG = JSON.parse(JSON.stringify(window.SHOW_META));
 	window.timeline.SONG.duration = window.audio.getDuration();
 

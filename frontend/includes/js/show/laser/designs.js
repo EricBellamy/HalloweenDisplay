@@ -1,4 +1,4 @@
-{
+window.LASER_DESIGNS = {
     "square-large": [
         {},
         "https://draw.halloween.ayyws.com/?points=fff%2C0%2C0%2Cfff%2C60%2C0%2Cfff%2C60%2C60%2Cfff%2C0%2C60"
