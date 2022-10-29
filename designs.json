@@ -43,33 +43,17 @@
         {},
         "https://draw.halloween.ayyws.com/?points=fff%2C45%2C25%2Cfff%2C42%2C14%2Cfff%2C30%2C10%2Cfff%2C20%2C15%2Cfff%2C15%2C30%2Cfff%2C20%2C45%2Cfff%2C30%2C50%2Cfff%2C42%2C47%2Cfff%2C45%2C35%2Cfff%2C36%2C42%2Cfff%2C24%2C40%2Cfff%2C24%2C30%2Cfff%2C24%2C20%2Cfff%2C37%2C17"
     ],
-    "horizontal-lines-left-to-right": [
-        {},
-        "https://draw.halloween.ayyws.com/?points=fff%2C10%2C10%2C000%2C50%2C10%2Cfff%2C10%2C20%2C000%2C50%2C20%2Cfff%2C10%2C30%2C000%2C50%2C30%2Cfff%2C10%2C40%2C000%2C50%2C40%2Cfff%2C10%2C50%2C000%2C50%2C50"
-    ],
     "horizontal-lines-left-to-right-slow": [
         {"speed-profile": 1},
         "https://draw.halloween.ayyws.com/?points=fff%2C10%2C10%2C000%2C50%2C10%2Cfff%2C10%2C20%2C000%2C50%2C20%2Cfff%2C10%2C30%2C000%2C50%2C30%2Cfff%2C10%2C40%2C000%2C50%2C40%2Cfff%2C10%2C50%2C000%2C50%2C50"
-    ],
-    "horizontal-lines-right-to-left": [
-        {},
-        "https://draw.halloween.ayyws.com/?points=fff%2C50%2C10%2C000%2C10%2C10%2Cfff%2C50%2C20%2C000%2C10%2C20%2Cfff%2C50%2C30%2C000%2C10%2C30%2Cfff%2C50%2C40%2C000%2C10%2C40%2Cfff%2C50%2C50%2C000%2C10%2C50"
     ],
     "horizontal-lines-right-to-left-slow": [
         {"speed-profile": 1},
         "https://draw.halloween.ayyws.com/?points=fff%2C50%2C10%2C000%2C10%2C10%2Cfff%2C50%2C20%2C000%2C10%2C20%2Cfff%2C50%2C30%2C000%2C10%2C30%2Cfff%2C50%2C40%2C000%2C10%2C40%2Cfff%2C50%2C50%2C000%2C10%2C50"
     ],
-    "vertical-lines-top-to-bottom": [
-        {},
-        "https://draw.halloween.ayyws.com/?points=fff%2C10%2C10%2C000%2C10%2C50%2Cfff%2C20%2C10%2C000%2C20%2C50%2Cfff%2C30%2C10%2C000%2C30%2C50%2Cfff%2C40%2C10%2C000%2C40%2C50%2Cfff%2C50%2C10%2C000%2C50%2C50"
-    ],
     "vertical-lines-top-to-bottom-slow": [
         {"speed-profile": 1},
         "https://draw.halloween.ayyws.com/?points=fff%2C10%2C10%2C000%2C10%2C50%2Cfff%2C20%2C10%2C000%2C20%2C50%2Cfff%2C30%2C10%2C000%2C30%2C50%2Cfff%2C40%2C10%2C000%2C40%2C50%2Cfff%2C50%2C10%2C000%2C50%2C50"
-    ],
-    "vertical-lines-bottom-to-top": [
-        {},
-        "https://draw.halloween.ayyws.com/?points=fff%2C10%2C50%2C000%2C10%2C10%2Cfff%2C20%2C50%2C000%2C20%2C10%2Cfff%2C30%2C50%2C000%2C30%2C10%2Cfff%2C40%2C50%2C000%2C40%2C10%2Cfff%2C50%2C50%2C000%2C50%2C10"
     ],
     "vertical-lines-bottom-to-top-slow": [
         {"speed-profile": 1},
@@ -84,7 +68,7 @@
         "https://draw.halloween.ayyws.com/?points=fff%2C50%2C10%2Cfff%2C10%2C10%2Cfff%2C10%2C50%2Cfff%2C50%2C50%2Cfff%2C50%2C20%2Cfff%2C20%2C20%2Cfff%2C20%2C40%2Cfff%2C40%2C40%2Cfff%2C40%2C30%2C000%2C30%2C30"
     ],
     "lightning-bolt": [
-        {},
+        {"scale": 3},
         "https://draw.halloween.ayyws.com/?points=fff%2C30%2C0%2Cfff%2C15%2C35%2Cfff%2C30%2C35%2Cfff%2C20%2C60%2Cfff%2C40%2C25%2Cfff%2C25%2C25"
     ],
     "circle": [
@@ -123,10 +107,6 @@
         {"speed-profile": 1},
         "https://draw.halloween.ayyws.com/?points=fff%2C15%2C55%2Cfff%2C0%2C30%2Cfff%2C15%2C5%2Cfff%2C45%2C5%2Cfff%2C60%2C30%2Cfff%2C45%2C55"
     ],
-    "septagon": [
-        {},
-        "https://draw.halloween.ayyws.com/?points=fff%2C17%2C60%2Cfff%2C5%2C40%2Cfff%2C10%2C20%2Cfff%2C30%2C10%2Cfff%2C50%2C20%2Cfff%2C54%2C40%2Cfff%2C43%2C60"
-    ],
     "septagon-slow": [
         {"speed-profile": 1},
         "https://draw.halloween.ayyws.com/?points=fff%2C17%2C60%2Cfff%2C5%2C40%2Cfff%2C10%2C20%2Cfff%2C30%2C10%2Cfff%2C50%2C20%2Cfff%2C54%2C40%2Cfff%2C43%2C60"
@@ -148,7 +128,7 @@
         "https://draw.halloween.ayyws.com/?points=fff%2C0%2C10%2Cfff%2C60%2C50%2Cfff%2C60%2C10%2Cfff%2C0%2C50"
     ],
     "pentagram": [
-        {},
+        {"scale": 4},
         "https://draw.halloween.ayyws.com/?points=fff%2C30%2C0%2Cfff%2C48%2C60%2Cfff%2C0%2C20%2Cfff%2C60%2C20%2Cfff%2C12%2C60"
     ],
     "pentagram-slow": [
@@ -156,32 +136,20 @@
         "https://draw.halloween.ayyws.com/?points=fff%2C30%2C0%2Cfff%2C48%2C60%2Cfff%2C0%2C20%2Cfff%2C60%2C20%2Cfff%2C12%2C60"
     ],
     "ghost": [
-        {},
+        {"scale": 3},
         "https://draw.halloween.ayyws.com/?points=fff%2C10%2C60%2Cfff%2C30%2C58%2Cfff%2C47%2C20%2Cfff%2C55%2C30%2Cfff%2C60%2C30%2Cfff%2C50%2C12%2Cfff%2C40%2C0%2Cfff%2C20%2C0%2Cfff%2C15%2C15%2Cfff%2C0%2C0%2Cfff%2C15%2C24%2Cfff%2C20%2C50"
     ],
     "bat": [
-        {},
+        {"scale": 3},
         "https://draw.halloween.ayyws.com/?points=fff%2C0%2C34%2Cfff%2C7%2C24%2Cfff%2C23%2C20%2Cfff%2C27%2C15%2Cfff%2C30%2C20%2Cfff%2C33%2C15%2Cfff%2C37%2C20%2Cfff%2C53%2C24%2Cfff%2C60%2C34%2Cfff%2C55%2C40%2Cfff%2C50%2C34%2Cfff%2C45%2C40%2Cfff%2C40%2C35%2Cfff%2C35%2C45%2Cfff%2C25%2C45%2Cfff%2C20%2C35%2Cfff%2C15%2C40%2Cfff%2C10%2C34%2Cfff%2C5%2C40"
     ],
     "pumpkin":
     [
-        {},
+        {"scale": 3},
         "https://draw.halloween.ayyws.com/?points=fff%2C0%2C30%2Cfff%2C2%2C15%2Cfff%2C10%2C10%2Cfff%2C15%2C13%2Cfff%2C20%2C10%2Cfff%2C25%2C13%2Cfff%2C25%2C0%2Cfff%2C35%2C0%2Cfff%2C35%2C13%2Cfff%2C40%2C10%2Cfff%2C46%2C13%2Cfff%2C50%2C10%2Cfff%2C58%2C15%2Cfff%2C60%2C30%2Cfff%2C58%2C45%2Cfff%2C50%2C50%2Cfff%2C45%2C46%2Cfff%2C40%2C50%2Cfff%2C35%2C46%2Cfff%2C30%2C50%2Cfff%2C25%2C46%2Cfff%2C20%2C50%2Cfff%2C15%2C46%2Cfff%2C10%2C50%2Cfff%2C2%2C45"
     ],
-    "gravestone": [
-        {},
-        "https://draw.halloween.ayyws.com/?points=fff%2C2%2C55%2Cfff%2C13%2C50%2Cfff%2C10%2C20%2Cfff%2C20%2C5%2Cfff%2C40%2C5%2Cfff%2C50%2C20%2Cfff%2C47%2C50%2Cfff%2C58%2C55"
-    ],
     "gravestone-cross": [
-        {},
+        {"scale": 3},
         "https://draw.halloween.ayyws.com/?points=fff%2C10%2C56%2Cfff%2C20%2C52%2Cfff%2C16%2C27%2Cfff%2C24%2C20%2Cfff%2C30%2C20%2C000%2C30%2C4%2Cfff%2C25%2C10%2C000%2C36%2C10%2Cfff%2C29%2C20%2Cfff%2C36%2C20%2Cfff%2C44%2C27%2Cfff%2C40%2C52%2Cfff%2C50%2C56"
-    ],
-    "smile": [
-        {},
-        "https://draw.halloween.ayyws.com/?points=fff%2C0%2C25%2Cfff%2C10%2C50%2Cfff%2C15%2C40%2Cfff%2C20%2C50%2Cfff%2C25%2C40%2Cfff%2C30%2C50%2Cfff%2C35%2C40%2Cfff%2C40%2C50%2Cfff%2C45%2C40%2Cfff%2C50%2C50%2Cfff%2C60%2C25%2Cfff%2C50%2C36%2Cfff%2C45%2C30%2Cfff%2C40%2C36%2Cfff%2C35%2C30%2Cfff%2C30%2C36%2Cfff%2C25%2C30%2Cfff%2C20%2C36%2Cfff%2C15%2C30%2C000%2C10%2C36%2Cfff%2C40%2C20%2Cfff%2C50%2C20%2Cfff%2C46%2C10%2C000%2C40%2C19%2Cfff%2C10%2C20%2Cfff%2C20%2C20%2Cfff%2C15%2C10%2C000%2C10%2C19%2Cfff%2C10%2C35"
-    ],
-    "smile-simple": [
-        {},
-        "https://draw.halloween.ayyws.com/?points=fff%2C0%2C30%2Cfff%2C10%2C50%2Cfff%2C15%2C40%2Cfff%2C20%2C50%2Cfff%2C25%2C40%2Cfff%2C30%2C50%2Cfff%2C35%2C40%2Cfff%2C40%2C50%2Cfff%2C45%2C40%2Cfff%2C50%2C50%2C000%2C60%2C30%2Cfff%2C55%2C20%2Cfff%2C40%2C20%2Cfff%2C55%2C10%2C000%2C55%2C19%2Cfff%2C5%2C20%2Cfff%2C20%2C20%2Cfff%2C5%2C10%2C000%2C5%2C19"
     ]
 }
