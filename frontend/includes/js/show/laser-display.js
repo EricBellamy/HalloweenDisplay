@@ -131,10 +131,13 @@ class LaserDisplayManager {
 			"0f0": [],
 			"00f": []
 		}
+		let MAX_RGB_VALUE = 0;
 		for(const point of newLaserDisplay.points){
-			newLaserDisplay.instructions["f00"].push([point.x, point.y, this.MAX_RGB_VALUE, 0, 0]);
-			newLaserDisplay.instructions["0f0"].push([point.x, point.y, 0, this.MAX_RGB_VALUE, 0]);
-			newLaserDisplay.instructions["00f"].push([point.x, point.y, 0, 0, this.MAX_RGB_VALUE]);
+			if(point.hex === "000") MAX_RGB_VALUE = 0;
+			else MAX_RGB_VALUE = this.MAX_RGB_VALUE;
+			newLaserDisplay.instructions["f00"].push([point.x, point.y, MAX_RGB_VALUE, 0, 0]);
+			newLaserDisplay.instructions["0f0"].push([point.x, point.y, 0, MAX_RGB_VALUE, 0]);
+			newLaserDisplay.instructions["00f"].push([point.x, point.y, 0, 0, MAX_RGB_VALUE]);
 		}
 
 
