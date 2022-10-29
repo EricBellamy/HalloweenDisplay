@@ -68,11 +68,12 @@ class Timeline {
 			window.mouseDownOn = "minimap";
 
 			this.highlightBaseBeat();
-			window.audio.stop();
 
 			const timelineProgress = Math.min(this.ele.minimapContainer.bounds.width, Math.max(0, event.screenX - this.ele.minimapContainer.bounds.x)) / this.ele.minimapContainer.bounds.width;
 			const timelineIndex = Math.min(this.view.maxWindowCount, Math.max(0, Math.floor(timelineProgress * this.SONG.beatCount - this.view.max / 2)));
 			this.setIndex(timelineIndex);
+
+			window.audio.playSingle();
 		}.bind(this));
 
 		document.addEventListener("mouseup", function () {
@@ -87,6 +88,8 @@ class Timeline {
 				const timelineIndex = Math.min(this.view.maxWindowCount, Math.max(0, Math.floor(timelineProgress * this.SONG.beatCount - this.view.max / 2)));
 
 				this.setIndex(timelineIndex);
+
+				window.audio.playSingle();
 			}
 		}.bind(this), 1000 / this.view.minimapFps, {
 			leading: true,

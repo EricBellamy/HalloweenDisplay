@@ -112,25 +112,24 @@ class AudioManager {
 		}
 	}
 	playSingle() {
-		if (window.mouseDownOn === undefined) {
-			this.updateHighlighter = false;
+		this.updateHighlighter = false;
 
-			// window.timeline.SONG.tempo --> The beats per minute
-			// window.timeline.SONG.duration --> The duration in seconds
-			this.startBeat = window.timeline.view.index + window.timeline.view.highlightIndex;
-			this.stopBeat = this.startBeat + 1;
+		// window.timeline.SONG.tempo --> The beats per minute
+		// window.timeline.SONG.duration --> The duration in seconds
+		this.startBeat = window.timeline.view.index + window.timeline.view.highlightIndex;
+		this.stopBeat = this.startBeat + 2;
 
-			this.startBeatTime = this.calculateBeatTimestamp(this.startBeat);
-			this.stopBeatTime = this.calculateBeatTimestamp(this.stopBeat);
+		this.startBeatTime = this.calculateBeatTimestamp(this.startBeat);
+		this.stopBeatTime = this.calculateBeatTimestamp(this.stopBeat);
 
-			this.remainingTimeMs = (this.stopBeatTime - this.startBeatTime) * 1000;
+		this.remainingTimeMs = (this.stopBeatTime - this.startBeatTime) * 1000;
 
-			this.audio.currentTime = this.startBeatTime;
+		this.audio.currentTime = this.startBeatTime;
 
-			this.playing = true;
-			this.render(0, true);
-			this.audio.play();
-		}
+		this.render(0, true);
+
+		if(!this.playing) this.audio.play();
+		this.playing = true;
 	}
 	pause() {
 		this.audio.pause();
