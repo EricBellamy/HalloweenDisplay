@@ -27,11 +27,12 @@ class AudioManager {
 	calculateBeatTimestamp(beatIndex) {
 		return (beatIndex / (window.timeline.SONG.scaledTempo)) * 60;
 	}
-	calculateBeatIndexFromTimestamp() {
-		const timestamp = this.audio.currentTime;
+	calculateBeatIndexFromTimestamp(timestamp) {
+		if (timestamp === undefined) timestamp = this.audio.currentTime;
 
 		const beatIndexVal = (timestamp / 60) * window.timeline.SONG.scaledTempo;
-		return Math.floor(Math.round(beatIndexVal * 1000) / 1000);
+		// return Math.floor(Math.round(beatIndexVal * 1000) / 1000);
+		return Math.round(beatIndexVal);
 	}
 	isPaused() {
 		return this.audio.paused;
@@ -47,7 +48,7 @@ class AudioManager {
 
 			if (this.stopBeat < beatIndex || this.audio.currentTime === this.audio.duration) return this.stop();
 
-			if (beatIndex != this.currentBeatIndex) {
+			if (this.updateHighlighter && beatIndex != this.currentBeatIndex) {
 				window.timeline.updateHighlighterIndex(beatIndex - this.startBeat, this.scrollWithHighlighter, firstRender);
 				this.currentBeatIndex = beatIndex;
 			}
@@ -57,9 +58,11 @@ class AudioManager {
 	playing = false;
 	stop() {
 		if (this.playing) {
-			// Reset the highlighter position
-			if (this.scrollWithHighlighter) window.timeline.highlightBaseBeat();
-			else window.timeline.highlightBeat(this.startingHighlighterIndex);
+			if (this.updateHighlighter) {
+				// Reset the highlighter position
+				if (this.scrollWithHighlighter) window.timeline.highlightBaseBeat();
+				else window.timeline.highlightBeat(this.startingHighlighterIndex);
+			}
 
 			this.playing = false;
 			this.startBeat = 0;
@@ -69,6 +72,7 @@ class AudioManager {
 			this.remainingTimeMs = 0;
 			this.currentBeatIndex = -1;
 			this.startingHighlighterIndex = 0;
+			this.updateHighlighter = true;
 			this.scrollWithHighlighter = false;
 
 			this.audio.pause();
@@ -86,8 +90,12 @@ class AudioManager {
 
 			// window.timeline.SONG.tempo --> The beats per minute
 			// window.timeline.SONG.duration --> The duration in seconds
+			console.log(this.startBeat);
 			this.startBeat = window.timeline.view.index;
 			this.stopBeat = this.startBeat + maxBeats;
+			console.log(this.stopBeat);
+			console.log(window.timeline.view.bpmScale);
+			console.log(window.timeline.SONG.bpmScale);
 
 			this.startBeatTime = this.calculateBeatTimestamp(this.startBeat);
 			this.stopBeatTime = this.calculateBeatTimestamp(this.stopBeat);
@@ -97,6 +105,27 @@ class AudioManager {
 			this.audio.currentTime = this.startBeatTime;
 
 			window.timeline.resetHighlighterIndex();
+
+			this.playing = true;
+			this.render(0, true);
+			this.audio.play();
+		}
+	}
+	playSingle() {
+		if (window.mouseDownOn === undefined) {
+			this.updateHighlighter = false;
+
+			// window.timeline.SONG.tempo --> The beats per minute
+			// window.timeline.SONG.duration --> The duration in seconds
+			this.startBeat = window.timeline.view.index + window.timeline.view.highlightIndex;
+			this.stopBeat = this.startBeat + 1;
+
+			this.startBeatTime = this.calculateBeatTimestamp(this.startBeat);
+			this.stopBeatTime = this.calculateBeatTimestamp(this.stopBeat);
+
+			this.remainingTimeMs = (this.stopBeatTime - this.startBeatTime) * 1000;
+
+			this.audio.currentTime = this.startBeatTime;
 
 			this.playing = true;
 			this.render(0, true);

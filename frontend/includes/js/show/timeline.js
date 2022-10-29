@@ -3,7 +3,7 @@ class Timeline {
 	view = {
 		BASE_HIGHLIGHT_INDEX: 4,
 		highlightIndex: 0,
-		index: 2, // The index of the first beat shown on the timeline
+		index: 0, // The index of the first beat shown on the timeline
 		max: 20, // The max beats that can be shown
 		bpmScale: 2, // How many beats per beat
 		minimapFps: 60,
@@ -37,6 +37,8 @@ class Timeline {
 	ele = {
 		timeline: document.querySelector("#timeline"),
 		sidebar: document.querySelector("#timelineSidebar"),
+
+		nav: document.querySelector("#nav"),
 
 		minimap: document.querySelector("#minimap"),
 		minimapContainer: document.querySelector("#minimapContainer"),
@@ -149,6 +151,7 @@ class Timeline {
 			this.ele.container.getBoundingClientRect().height -
 			(displayBounds.height +
 				this.ele.minimap.getBoundingClientRect().height +
+				this.ele.nav.getBoundingClientRect().height +
 				parseInt(window.getComputedStyle(this.ele.minimapContainer).marginBottom) +
 				parseInt(window.getComputedStyle(this.ele.container).paddingTop) +
 				parseInt(window.getComputedStyle(this.ele.container).paddingBottom))
@@ -268,16 +271,16 @@ class Timeline {
 		this.render();
 	}
 	decreaseIndex() {
-		if(this.view.index - 1 < 0) this.highlightPreviousBeat();
-		else if(this.view.BASE_HIGHLIGHT_INDEX < this.view.highlightIndex) this.highlightPreviousBeat();
+		if (this.view.index - 1 < 0) this.highlightPreviousBeat();
+		else if (this.view.BASE_HIGHLIGHT_INDEX < this.view.highlightIndex) this.highlightPreviousBeat();
 		else this.view.index = Math.max(0, this.view.index - 1);
 
 		this.updateMinimapWindowPosition();
 		this.render();
 	}
 	increaseIndex() {
-		if(this.view.maxWindowCount < this.view.index + 1) this.highlightNextBeat();
-		else if(this.view.highlightIndex < this.view.BASE_HIGHLIGHT_INDEX) this.highlightNextBeat();
+		if (this.view.maxWindowCount < this.view.index + 1) this.highlightNextBeat();
+		else if (this.view.highlightIndex < this.view.BASE_HIGHLIGHT_INDEX) this.highlightNextBeat();
 		else this.view.index = Math.min(this.view.maxWindowCount, this.view.index + 1);
 
 		this.updateMinimapWindowPosition();
@@ -302,34 +305,34 @@ class Timeline {
 
 		this.ele.timeline_columns[index].classList.toggle("marked", status);
 	}
-	
+
 	// Reset highlighter to 0
-	resetHighlighterIndex(){
+	resetHighlighterIndex() {
 		this.highlightBeat(0);
 	}
-	highlightBaseBeat(){
+	highlightBaseBeat() {
 		this.highlightBeat(this.view.BASE_HIGHLIGHT_INDEX);
 	}
-	updateHighlighterIndex(relativeBeatIndex, scrollWithHighlighter = false, isFirstUpdate = false){
-		if(scrollWithHighlighter){
+	updateHighlighterIndex(relativeBeatIndex, scrollWithHighlighter = false, isFirstUpdate = false) {
+		if (scrollWithHighlighter) {
 			// Check if we need to scroll the timeline here
 
 			// If we're at the end of the timeline
-			if(this.view.maxWindowCount <= this.view.index){
-				if(isFirstUpdate) this.highlightBeat(this.view.highlightIndex);
+			if (this.view.maxWindowCount <= this.view.index) {
+				if (isFirstUpdate) this.highlightBeat(this.view.highlightIndex);
 				else {
 					this.highlightNextBeat();
 				}
 
 				this.renderCurrentView();
 				return;
-			// Scrolling through timeline
-			} else if(this.view.BASE_HIGHLIGHT_INDEX < relativeBeatIndex) {
+				// Scrolling through timeline
+			} else if (this.view.BASE_HIGHLIGHT_INDEX < relativeBeatIndex) {
 				this.highlightBeat(this.view.BASE_HIGHLIGHT_INDEX);
 
 				this.view.index++;
 
-			// Start of timeline
+				// Start of timeline
 			} else this.highlightBeat(relativeBeatIndex);
 
 			this.render();
@@ -340,11 +343,11 @@ class Timeline {
 	}
 
 
-	highlightNextBeat(){
+	highlightNextBeat() {
 		const index = Math.max(0, Math.min(this.view.max - 1, this.view.highlightIndex + 1));
 		this.highlightBeat(index);
 	}
-	highlightPreviousBeat(){
+	highlightPreviousBeat() {
 		const index = Math.max(0, Math.min(this.view.max - 1, this.view.highlightIndex - 1));
 		this.highlightBeat(index);
 	}
@@ -356,7 +359,18 @@ class Timeline {
 		this.ele.timeline_columns[index].classList.toggle("active", true);
 	}
 
-	
+	decreaseBaseHighlightIndex(){
+		const index = Math.max(0, this.view.BASE_HIGHLIGHT_INDEX - 1);
+		this.highlightBeat(index);
+		this.view.BASE_HIGHLIGHT_INDEX = index;
+	}
+	increaseBaseHighlightIndex(){
+		const index = Math.min(this.view.max - 1, this.view.BASE_HIGHLIGHT_INDEX + 1);
+		this.highlightBeat(index);
+		this.view.BASE_HIGHLIGHT_INDEX = index;
+	}
+
+
 
 	toggleInput(x, y, bounds) {
 		const targetDevice = window.device.findAt(y);
@@ -451,6 +465,11 @@ class Timeline {
 		this.updateEventValue(beatIndex, targetDevice, value);
 
 		this.render();
+
+		this.generateInstructions();
+	}
+	addManualEvent(value, device, beatIndex){
+		this.updateEventValue(beatIndex, device, value);
 	}
 	removeEvent(timelineIndex, key) {
 		const deviceName = window.device.current.current.device.name;
@@ -712,13 +731,71 @@ class Timeline {
 	}
 
 	getCurrentEventForDevice(deviceName) {
-		const targetEvents = this.events[this.view.index];
-		if (targetEvents) if (targetEvents[deviceName]) return this.events[this.view.index][deviceName];
+		const targetEvents = this.events[this.view.index + this.view.highlightIndex];
+		if (targetEvents) if (targetEvents[deviceName]) return this.events[this.view.index + this.view.highlightIndex][deviceName];
 		return false;
 	}
 
 	loadFromInstructions(instructions) {
 		// Load the events from the instructions provided
+		for(const BEAT_TIMESTAMP_MS in instructions){
+			const BEAT_INDEX = window.audio.calculateBeatIndexFromTimestamp(parseInt(BEAT_TIMESTAMP_MS) / 1000);
+			const BEAT_DEVICES = instructions[BEAT_TIMESTAMP_MS];
+
+			for(const BEAT_DEVICE_KEY in BEAT_DEVICES){
+				const BEAT_DEVICE_VALUE = BEAT_DEVICES[BEAT_DEVICE_KEY];
+				const BEAT_DEVICE = window.device.findDeviceWithName(BEAT_DEVICE_KEY);
+
+				BEAT_DEVICE.input.import({
+					value: BEAT_DEVICE_VALUE,
+					beatIndex: BEAT_INDEX,
+					device: BEAT_DEVICE
+				})
+			}
+		}
+		this.render();
+	}
+
+	generateInstructions() {
+		const INSTRUCTIONS = {
+			// "0": {
+			// 	"laser-1": {
+			// 		"points": [
+			// 			["x-pos", "y-pos", "r", "g", "b"],
+			// 			["x-pos", "y-pos", "r", "g", "b"]
+			// 		],
+			// 		"config": {
+			// 			"home": true,
+			// 			"speed-profile": 1
+			// 		}
+			// 	},
+			// 	"light-1": 1.0
+			// },
+			// "1000": {
+			// 	"laser-1": 0,
+			// 	"light-1": 0,
+			// 	"fog-1": 0.6
+			// }
+		}
+
+		for (const BEAT_INDEX in this.events) {
+			const BEAT_TIMESTAMP_MS = Math.round(window.audio.calculateBeatTimestamp(BEAT_INDEX) * 1000);
+			const BEAT_DEVICES = this.events[BEAT_INDEX];
+
+			INSTRUCTIONS[BEAT_TIMESTAMP_MS] = {};
+			for(const BEAT_DEVICE_NAME in BEAT_DEVICES){
+				const BEAT_DEVICE = BEAT_DEVICES[BEAT_DEVICE_NAME];
+				const INPUT_EXPORT = BEAT_DEVICE.device.input.export(BEAT_DEVICE);
+				INSTRUCTIONS[BEAT_TIMESTAMP_MS][BEAT_DEVICE_NAME] = INPUT_EXPORT;
+			}
+		}
+		tired.xhr.post("/save", {
+			show: window.SHOW_ID,
+			version: window.SHOW_VERSION,
+			instructions: INSTRUCTIONS
+		}, function(response){
+			console.log(response.status === 200);
+		}, true);
 	}
 }
 

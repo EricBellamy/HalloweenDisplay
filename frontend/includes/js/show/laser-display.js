@@ -108,7 +108,8 @@ class LaserDisplayManager {
 		const newLaserDisplay = {
 			URL: URL,
 			len: 0,
-			points: []
+			points: [],
+			config: designConfig
 		};
 
 		const substringIndex = "?points=";
@@ -126,14 +127,14 @@ class LaserDisplayManager {
 
 		// ["x-pos", "y-pos", "r", "g", "b"]
 		newLaserDisplay.instructions = {
-			r: [],
-			g: [],
-			b: []
+			"f00": [],
+			"0f0": [],
+			"00f": []
 		}
 		for(const point of newLaserDisplay.points){
-			newLaserDisplay.instructions.r.push([point.x, point.y, this.MAX_RGB_VALUE, 0, 0]);
-			newLaserDisplay.instructions.g.push([point.x, point.y, 0, this.MAX_RGB_VALUE, 0]);
-			newLaserDisplay.instructions.b.push([point.x, point.y, 0, 0, this.MAX_RGB_VALUE]);
+			newLaserDisplay.instructions["f00"].push([point.x, point.y, this.MAX_RGB_VALUE, 0, 0]);
+			newLaserDisplay.instructions["0f0"].push([point.x, point.y, 0, this.MAX_RGB_VALUE, 0]);
+			newLaserDisplay.instructions["00f"].push([point.x, point.y, 0, 0, this.MAX_RGB_VALUE]);
 		}
 
 
@@ -168,6 +169,10 @@ class LaserDisplayManager {
 
 
 		this.designs[name] = newLaserDisplay;
+	}
+
+	getDesign(name){
+		return this.designs[name];
 	}
 
 	registerCanvas(name, canvas) {

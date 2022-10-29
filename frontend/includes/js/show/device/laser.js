@@ -5,7 +5,10 @@ laserInput.elementParts = tired.html.parse(laserInput.element);
 laserInput.timelineElement = function (value) {
 	return tired.html.create(`<div class="beat"><div>${value.value}</div></div>`);
 }
-laserInput.timelineElementStyles = function(element, value, device){
+laserInput.timelineElementStyles = function (element, value, device) {
+	// console.log("THE TIMELINE ELEMENT STYLES");
+	// console.log(element);
+	// console.log(value);
 	element.style.background = "#" + device.params.colorOptions[value.colorIndex].dataset.hex;
 }
 laserInput.deactivate = function (close = false) {
@@ -15,6 +18,7 @@ laserInput.deactivate = function (close = false) {
 	if (close) return;
 
 	const params = laserInput.current.device.params;
+
 	// Create / Update the event here
 	window.timeline.addEvent({
 		value: laserInput.current.value,
@@ -33,22 +37,59 @@ laserInput.render = function (device, value) {
 laserInput.unRender = function (device) {
 	if (device.value) window.LaserInterpolationManager.deactivate(device.name);
 }
+laserInput.import = function (event) {
+	if (event.value === 0) {
+		window.timeline.addManualEvent(0, event.device, event.beatIndex);
+	} else {
+		const options = event.device.params.colorOptions;
+		let colorIndex = 0;
+		for(let a = 0; a < options.length; a++){
+			if(options[a].dataset.hex === event.value.hex){
+				colorIndex = a;
+				break;
+			}
+		}
+		window.timeline.addManualEvent({
+			value: event.value.value,
+			colorIndex: colorIndex,
+			hex: event.value.hex,
+		}, event.device, event.beatIndex);
+	}
+}
+laserInput.export = function (event) {
+	if (event.value === 0) return event.value;
+
+	const LASER_DESIGN = window.laserDisplay.getDesign(event.value.value);
+
+	const EXPORT_OBJECT = {
+		// "points": [],
+		"config": LASER_DESIGN.config
+	};
+
+	EXPORT_OBJECT.points = LASER_DESIGN.instructions[event.value.hex];
+	EXPORT_OBJECT.hex = event.value.hex;
+	EXPORT_OBJECT.value = event.value.value;
+
+
+	return EXPORT_OBJECT;
+}
 
 document.body.appendChild(laserInput.element);
 window.popups.laserPopup = laserInput;
 
 
 
-function addLaserDevice(elementTag){
+function addLaserDevice(elementTag) {
 	const laserEle = document.querySelector("#" + elementTag);
 	const laserEleOptions = laserEle.querySelectorAll(".laser-color-option");
 
 	const newLaserDevice = window.device.addDevice("laser", "laserPopup", laserEle, "79a8d0", { colorIndex: 0, colorOptions: laserEleOptions });
 
-	for(const option of laserEleOptions){
+	for (const option of laserEleOptions) {
 		option.laserEle = laserEle;
 		option.laserDevice = newLaserDevice;
-		option.addEventListener("click", function(){
+		option.addEventListener("click", function () {
+			console.log("OPTION CLICKED!");
 			const params = this.laserDevice.params;
 			params.colorOptions[params.colorIndex].classList.toggle("active", false);
 
@@ -59,9 +100,11 @@ function addLaserDevice(elementTag){
 			this.classList.toggle("active", true);
 
 			const currentEvent = window.timeline.getCurrentEventForDevice(this.laserDevice.name);
-			if(currentEvent) {
+			if (currentEvent) {
 				currentEvent.value.hex = params.colorOptions[params.colorIndex].dataset.hex;
 				currentEvent.value.colorIndex = colorIndex;
+
+				window.timeline.generateInstructions();
 			}
 
 			window.timeline.render();
@@ -72,13 +115,17 @@ function addLaserDevice(elementTag){
 	window.laserDisplay.registerCanvas(elementTag, document.querySelector(`#${elementTag}-canvas`));
 }
 
+
 // Register the lasers
 addLaserDevice("laser-1");
 addLaserDevice("laser-2");
 addLaserDevice("laser-3");
 
 // Register the designs
-window.laserDisplay.registerDesign("shuriken", {}, "http://localhost:3000/points.html?points=0f0%2C30%2C18%2C0f0%2C60%2C0%2C00f%2C42%2C30%2C00f%2C60%2C60%2Cff0%2C30%2C42%2Cff0%2C0%2C60%2Cf00%2C18%2C30%2Cf00%2C0%2C0");
+window.laserDisplay.registerDesign("shuriken", {
+	"home": true,
+	"speed-profile": 1
+}, "http://localhost:3000/points.html?points=0f0%2C30%2C18%2C0f0%2C60%2C0%2C00f%2C42%2C30%2C00f%2C60%2C60%2Cff0%2C30%2C42%2Cff0%2C0%2C60%2Cf00%2C18%2C30%2Cf00%2C0%2C0");
 window.laserDisplay.registerDesign("lollipop", "http://localhost:3000/points.html?points=fff%2C28%2C30%2Cfff%2C28%2C43%2Cfff%2C32%2C43%2Cfff%2C32%2C30%2Cfff%2C36%2C27%2Cfff%2C39%2C23%2Cfff%2C39%2C18%2Cfff%2C36%2C14%2Cfff%2C32%2C11%2Cfff%2C28%2C11%2Cfff%2C24%2C14%2Cfff%2C21%2C18%2Cfff%2C21%2C23%2Cfff%2C24%2C27");
 window.laserDisplay.registerDesign("rock", "?points=ffffff%2C20%2C8%2Cffffff%2C45%2C9%2Cffffff%2C54%2C17%2Cffffff%2C53%2C33%2Cffffff%2C53%2C50%2Cffffff%2C40%2C56%2Cffffff%2C24%2C57%2Cffffff%2C14%2C54%2Cffffff%2C11%2C42%2Cffffff%2C7%2C31%2Cffffff%2C7%2C22%2Cffffff%2C9%2C17%2Cffffff%2C14%2C12%2Cffffff%2C17%2C10");
 window.laserDisplay.registerDesign("hexagon", "http://localhost:3000/points.html?points=fff%2C10%2C20%2Cfff%2C20%2C10%2Cfff%2C40%2C10%2Cfff%2C50%2C20%2Cfff%2C50%2C40%2Cfff%2C40%2C50%2Cfff%2C20%2C50%2Cfff%2C10%2C40");

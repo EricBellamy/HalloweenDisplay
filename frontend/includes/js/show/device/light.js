@@ -37,6 +37,12 @@ floatInput.unRender = function(device){
 	device.element.style.background = null;
 	device.element.style.opacity = null;
 }
+floatInput.import = function(event){
+	window.timeline.addManualEvent(event.value * 100, event.device, event.beatIndex)
+}
+floatInput.export = function(event){
+	return event.value / 100;
+}
 
 // Listen for select
 floatInput.elementParts[0].addEventListener('input', function () {

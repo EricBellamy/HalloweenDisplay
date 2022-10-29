@@ -525,6 +525,12 @@ window.LOADED_SONG_ANALYSIS = {
 
 const params = new URLSearchParams(location.search);
 window.SHOW_ID = params.get('show');
+window.SHOW_VERSION = params.get('version');
+if(window.SHOW_VERSION === null || window.SHOW_VERSION.length === 0) {
+	window.SHOW_VERSION = new Date().getTime();
+	params.set('version', window.SHOW_VERSION);
+	window.history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
+}
 
 async function loadShowData() {
 	await new Promise(function (resolve, reject, returned = 0) {
@@ -534,8 +540,8 @@ async function loadShowData() {
 			returned++;
 			if (returned === 3) resolve();
 		});
-		tired.xhr.get("/instructions?show=" + window.SHOW_ID, function (err, response, status) {
-			if (status === 200) console.log(response);
+		tired.xhr.get(`/instructions?show=${window.SHOW_ID}&version=${window.SHOW_VERSION}`, function (err, response, status) {
+			if (status === 200) window.SHOW_INSTRUCTIONS = response
 			else window.SHOW_INSTRUCTIONS = {};
 
 			returned++;
@@ -557,8 +563,8 @@ async function loadShowData() {
 	window.timeline.SONG.tempo = parseFloat(window.LOADED_SONG_ANALYSIS.tempo);
 	window.timeline.SONG.beats = window.LOADED_SONG_ANALYSIS.beats;
 
-	window.timeline.loadFromInstructions(JSON.parse(JSON.stringify(window.SHOW_INSTRUCTIONS)));
-
 	initTimeline();
+
+	window.timeline.loadFromInstructions(JSON.parse(window.SHOW_INSTRUCTIONS));
 }
 loadShowData();
