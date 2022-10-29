@@ -13,8 +13,17 @@ class AudioManager {
 	stopBeatTime = 0;
 	remainingTimeMs = 0;
 
+	timestampStart;
+	timestampEnd;
 	constructor(audio) {
 		this.audio = audio;
+
+		this.timestampStart = document.querySelector("#timestampStart");
+		this.timestampEnd = document.querySelector("#timestampEnd");
+
+		this.timestampStart.innerHTML = this.getFormattedTimestampFromSeconds(0);
+		this.timestampEnd.innerHTML = this.getFormattedTimestampFromSeconds(audio.duration);
+
 		// this.audio.duration
 		// this.audio.currentTime = float value of seconds
 		// this.audio.volume = 0 -> 1 
@@ -130,6 +139,14 @@ class AudioManager {
 
 		if(!this.playing) this.audio.play();
 		this.playing = true;
+	}
+	updateTimestamp(seconds){
+		const formattedTime = this.getFormattedTimestampFromSeconds(seconds);
+
+	}
+	getFormattedTimestampFromSeconds(seconds){
+		const minutes = Math.floor(seconds % 60);
+		return `${Math.floor(seconds / 60)}:${minutes < 10 ? 0 : ""}${minutes}`;
 	}
 	pause() {
 		this.audio.pause();

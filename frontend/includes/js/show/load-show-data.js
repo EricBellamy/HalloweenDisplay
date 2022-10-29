@@ -564,6 +564,7 @@ async function loadShowData() {
 
 	window.timeline.SONG = JSON.parse(JSON.stringify(window.SHOW_META));
 	window.timeline.SONG.duration = window.audio.getDuration();
+	window.timeline.SONG.instructions = JSON.parse(window.SHOW_INSTRUCTIONS);
 
 	window.timeline.SONG.tempo = parseFloat(window.LOADED_SONG_ANALYSIS.tempo);
 	window.timeline.SONG.beats = window.LOADED_SONG_ANALYSIS.beats;

@@ -1,3 +1,11 @@
+function deepEqual(x, y) {
+	const ok = Object.keys, tx = typeof x, ty = typeof y;
+	return x && y && tx === 'object' && tx === ty ? (
+	  ok(x).length === ok(y).length &&
+		ok(x).every(key => deepEqual(x[key], y[key]))
+	) : (x === y);
+  }
+
 class Timeline {
 	selected = undefined;
 	view = {
@@ -792,13 +800,8 @@ class Timeline {
 				INSTRUCTIONS[BEAT_TIMESTAMP_MS][BEAT_DEVICE_NAME] = INPUT_EXPORT;
 			}
 		}
-		tired.xhr.post("/save", {
-			show: window.SHOW_ID,
-			version: window.SHOW_VERSION,
-			instructions: INSTRUCTIONS
-		}, function(response){
-			console.log(response.status === 200);
-		}, true);
+		window.nav.ele.saveBtn.classList.toggle("active", !deepEqual(INSTRUCTIONS, this.SONG.instructions));
+		return INSTRUCTIONS;
 	}
 }
 
