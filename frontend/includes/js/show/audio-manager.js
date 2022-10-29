@@ -20,6 +20,7 @@ class AudioManager {
 
 		this.timestampStart = document.querySelector("#timestampStart");
 		this.timestampEnd = document.querySelector("#timestampEnd");
+		this.timestamp = document.querySelector("#timestamp");
 
 		this.timestampStart.innerHTML = this.getFormattedTimestampFromSeconds(0);
 		this.timestampEnd.innerHTML = this.getFormattedTimestampFromSeconds(audio.duration);
@@ -84,12 +85,17 @@ class AudioManager {
 			this.updateHighlighter = true;
 			this.scrollWithHighlighter = false;
 
+			this.timestamp.classList.toggle("playing", false);
+
 			this.audio.pause();
 		}
 	}
 
 	startingHighlighterIndex = -1;
 	scrollWithHighlighter = false;
+	updatePlayElements(){
+		this.timestamp.classList.toggle("playing", true);
+	}
 	playRange(maxBeats, scrollWithHighlighter = false) {
 		if (window.mouseDownOn === undefined) {
 			this.scrollWithHighlighter = scrollWithHighlighter;
@@ -118,6 +124,7 @@ class AudioManager {
 			this.playing = true;
 			this.render(0, true);
 			this.audio.play();
+			this.updatePlayElements();
 		}
 	}
 	playSingle() {
@@ -139,6 +146,7 @@ class AudioManager {
 
 		if(!this.playing) this.audio.play();
 		this.playing = true;
+		this.updatePlayElements();
 	}
 	updateTimestamp(seconds){
 		const formattedTime = this.getFormattedTimestampFromSeconds(seconds);

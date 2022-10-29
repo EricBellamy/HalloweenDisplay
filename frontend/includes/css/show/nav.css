@@ -24,11 +24,15 @@
 	opacity: 1;
 }
 
-#playControls {
+#timestamp {
 	display: flex;
 	padding: 0.5rem 1rem;
 	color: #fff;
 	background: #1b1c1d;
+	cursor: pointer;
+}
+#timestamp.playing {
+	background: rgb(67, 143, 101);
 }
 #timestampStart {
 	padding-right: 0.5rem;
