@@ -12,8 +12,6 @@ async function loadShowData() {
 		tired.xhr.get("/metadata?show=" + window.SHOW_ID, function (err, response, status) {
 			if (status === 200) window.SHOW_META = JSON.parse(response);
 
-			console.log(window.SHOW_META);
-
 			returned++;
 			if (returned === 3) resolve();
 		});

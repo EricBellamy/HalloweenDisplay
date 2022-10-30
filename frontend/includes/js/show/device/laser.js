@@ -3,7 +3,9 @@ const laserInput = window.device.addInput("laserPopup");
 laserInput.element = window.laserDisplay.element;
 laserInput.elementParts = tired.html.parse(laserInput.element);
 laserInput.timelineElement = function (value) {
-	return tired.html.create(`<div class="beat"><div>${value.value}</div></div>`);
+	console.log("THE TIMELINE ELEMENT:");
+	console.log(value);
+	return tired.html.create(`<div class="beat"><img class="beat-icon" src="${value.iconSrc}" /></div>`);
 }
 laserInput.timelineElementStyles = function (element, value, device) {
 	// console.log("THE TIMELINE ELEMENT STYLES");
@@ -57,6 +59,7 @@ laserInput.import = function (event) {
 			value: event.value.value,
 			colorIndex: colorIndex,
 			hex: event.value.hex,
+			iconSrc: window.laserDisplay.getDesign(event.value.value).iconSrc
 		}, event.device, event.beatIndex);
 	}
 }
