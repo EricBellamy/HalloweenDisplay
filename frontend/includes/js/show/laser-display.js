@@ -28,6 +28,7 @@ class LaserDisplayManager {
 		this.elementParts[0][0].addEventListener("click", function(){
 			laserInput.deactivate(true);
 		});
+		this.registerIconCanvas();
 	}
 
 	drawLine(context, startX, startY, endX, endY, color = "ffffff", alpha = 1, debug = false) {
@@ -125,6 +126,11 @@ class LaserDisplayManager {
 			}, savedPoints[a * pointData], a));
 		}
 
+		if(newLaserDisplay.URL === "https://draw.halloween.ayyws.com/?points=fff%2C45%2C25%2Cfff%2C42%2C14%2Cfff%2C30%2C10%2Cfff%2C20%2C15%2Cfff%2C15%2C30%2Cfff%2C20%2C45%2Cfff%2C30%2C50%2Cfff%2C42%2C47%2Cfff%2C45%2C35%2Cfff%2C36%2C42%2Cfff%2C24%2C40%2Cfff%2C24%2C30%2Cfff%2C24%2C20%2Cfff%2C37%2C17"){
+			console.log(newLaserDisplay);
+			console.log(this.iconContext);
+		}
+
 		// ["x-pos", "y-pos", "r", "g", "b"]
 		newLaserDisplay.instructions = {
 			"f00": [],
@@ -187,6 +193,12 @@ class LaserDisplayManager {
 			canvas: canvas,
 			context: context
 		};
+	}
+	registerIconCanvas(){
+		this.iconCanvas = document.querySelector("#laserIconCanvas");
+		this.iconContext = this.iconCanvas.getContext("2d");
+		this.iconCanvas.width = 60;
+		this.iconCanvas.height = 60;
 	}
 }
 window.laserDisplay = new LaserDisplayManager();
