@@ -45,3 +45,21 @@
 	color: #04f;
 	background: #0000ff33;
 }
+
+#laserIconCanvas {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 60px;
+	height: 60px;
+	z-index: -100;
+	opacity: 0;
+}
+#laserIconTestImg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 60px;
+	height: 60px;
+	z-index: 100;
+}

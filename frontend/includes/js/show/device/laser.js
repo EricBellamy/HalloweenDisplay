@@ -3,13 +3,12 @@ const laserInput = window.device.addInput("laserPopup");
 laserInput.element = window.laserDisplay.element;
 laserInput.elementParts = tired.html.parse(laserInput.element);
 laserInput.timelineElement = function (value) {
-	return tired.html.create(`<div class="beat"><div>${value.value}</div></div>`);
+	return tired.html.create(`<div class="beat"><img class="beat-icon" src="${value.iconSrc}" /></div>`);
 }
 laserInput.timelineElementStyles = function (element, value, device) {
-	// console.log("THE TIMELINE ELEMENT STYLES");
-	// console.log(element);
-	// console.log(value);
-	element.style.background = "#" + device.params.colorOptions[value.colorIndex].dataset.hex;
+	const hexColor = device.params.colorOptions[value.colorIndex].dataset.hex;
+	if(hexColor.length === 3) element.style.background = "#" + hexColor[0] + hexColor[0] + hexColor[1] + hexColor[1] + hexColor[2] + hexColor[2] + "66";
+	else element.style.background = "#" + hexColor;
 }
 laserInput.deactivate = function (close = false) {
 	this.element.classList.toggle("hidden", true);
@@ -23,7 +22,8 @@ laserInput.deactivate = function (close = false) {
 	window.timeline.addEvent({
 		value: laserInput.current.value,
 		colorIndex: params.colorIndex,
-		hex: params.colorOptions[params.colorIndex].dataset.hex
+		hex: params.colorOptions[params.colorIndex].dataset.hex,
+		iconSrc: window.laserDisplay.getDesign(laserInput.current.value).iconSrc
 	});
 }
 laserInput.activate = function (beatX, beatY, beatBounds, device) {
@@ -31,6 +31,10 @@ laserInput.activate = function (beatX, beatY, beatBounds, device) {
 }
 
 laserInput.render = function (device, value) {
+	device.params.colorOptions[device.params.colorIndex].classList.toggle("active", false);
+	device.params.colorOptions[value.colorIndex].classList.toggle("active", true);
+	device.params.colorIndex = value.colorIndex;
+	
 	device.value = value.value;
 	window.LaserInterpolationManager.activate(device.name, value.value, value.hex, window.laserDisplay.getContext(device.name));
 }
@@ -53,6 +57,7 @@ laserInput.import = function (event) {
 			value: event.value.value,
 			colorIndex: colorIndex,
 			hex: event.value.hex,
+			iconSrc: window.laserDisplay.getDesign(event.value.value).iconSrc
 		}, event.device, event.beatIndex);
 	}
 }

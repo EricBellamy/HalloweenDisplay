@@ -2,7 +2,6 @@ class LaserDisplayManager {
 	INTERPOLATION_FPS = 10;
 	MAX_RGB_VALUE = 7;
 
-	downscaleFactor = 1;
 	CURRENT_COLOR = "";
 
 	designs = {};
@@ -28,14 +27,10 @@ class LaserDisplayManager {
 		this.elementParts[0][0].addEventListener("click", function(){
 			laserInput.deactivate(true);
 		});
+		this.registerIconCanvas();
 	}
 
-	drawLine(context, startX, startY, endX, endY, color = "ffffff", alpha = 1, debug = false) {
-		startX *= this.downscaleFactor;
-		startY *= this.downscaleFactor;
-		endX *= this.downscaleFactor;
-		endY *= this.downscaleFactor;
-
+	drawLine(context, startX, startY, endX, endY, color = "ffffff", alpha = 1, ignoreDownscale = false) {
 		// if (this.CURRENT_COLOR != color) {
 		// 	this.CURRENT_COLOR = color;
 		// 	context.strokeStyle = `#${color}`;
@@ -49,7 +44,7 @@ class LaserDisplayManager {
 		context.stroke();
 	}
 
-	renderCanvasLines(context, points) {
+	renderCanvasLines(context, points, ignoreDownscale = false) {
 		const pointsLen = points.length;
 		if (pointsLen <= 1) return;
 
@@ -58,24 +53,19 @@ class LaserDisplayManager {
 			point = points[a];
 			next = points[a + 1];
 
-			this.drawLine(context, point.x, point.y, next.x, next.y, point.hex);
+			if(point.hex != "000") this.drawLine(context, point.x, point.y, next.x, next.y, point.hex, 1, ignoreDownscale);
 		}
+
+		// Draw line back to origin
 		if (2 < pointsLen) {
 			point = points[a];
 			next = points[0];
-			this.drawLine(context, point.x, point.y, next.x, next.y, point.hex);
+			if(point.hex != "000") this.drawLine(context, point.x, point.y, next.x, next.y, point.hex, 1, ignoreDownscale);
 		}
 	}
 
 	getContext(name){
 		return this.canvases[name].context;
-	}
-	renderCanvas(name, laserDisplayName) {
-		const context = this.canvases[name].context;
-		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-
-		// Draw canvas lines
-		this.renderCanvasLines(context, this.designs[laserDisplayName].points);
 	}
 	clearCanvas(name) {
 		const context = this.canvases[name].context;
@@ -109,6 +99,7 @@ class LaserDisplayManager {
 			URL: URL,
 			len: 0,
 			points: [],
+			iconPoints: [],
 			config: designConfig
 		};
 
@@ -125,7 +116,14 @@ class LaserDisplayManager {
 				x: parseInt(savedPoints[a * pointData + 1]) * scaleFactor + (30*(5-scaleFactor)),
 				y: parseInt(savedPoints[a * pointData + 2]) * scaleFactor + (30*(5-scaleFactor))
 			}, savedPoints[a * pointData], a));
+			newLaserDisplay.iconPoints.push(this.createPoint({
+				x: parseInt(savedPoints[a * pointData + 1]),
+				y: parseInt(savedPoints[a * pointData + 2])
+			}, savedPoints[a * pointData], a));
 		}
+
+		newLaserDisplay.iconSrc = this.generateLaserIcon(newLaserDisplay.iconPoints);
+
 
 		// ["x-pos", "y-pos", "r", "g", "b"]
 		newLaserDisplay.instructions = {
@@ -165,9 +163,6 @@ class LaserDisplayManager {
 					alpha: currentPoint.alpha
 				});
 			}
-			// console.log(currentPoint);
-			// console.log(nextPoint);
-			// if(a === 1) break;
 		}
 
 		window.LaserInterpolationManager.register(name, newLaserDisplay.points, newLaserDisplay.INTERPOLATION_POINTS);
@@ -189,6 +184,17 @@ class LaserDisplayManager {
 			canvas: canvas,
 			context: context
 		};
+	}
+	registerIconCanvas(){
+		this.iconCanvas = document.querySelector("#laserIconCanvas");
+		this.iconContext = this.iconCanvas.getContext("2d");
+		this.iconCanvas.width = 60;
+		this.iconCanvas.height = 60;
+	}
+	generateLaserIcon(iconPoints){
+		this.iconContext.clearRect(0, 0, this.iconContext.canvas.width, this.iconContext.canvas.height);
+		this.renderCanvasLines(this.iconContext, iconPoints, true);
+		return this.iconCanvas.toDataURL();
 	}
 }
 window.laserDisplay = new LaserDisplayManager();
