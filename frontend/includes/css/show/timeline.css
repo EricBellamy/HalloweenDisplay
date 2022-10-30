@@ -78,6 +78,9 @@
 	flex-direction: column;
 }
 
+#timelineBackground .column.marked {
+	background: #444;
+}
 #timelineBackground .column.active {
 	background: #fa0;
 }

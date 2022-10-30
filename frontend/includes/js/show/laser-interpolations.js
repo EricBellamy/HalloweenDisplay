@@ -64,12 +64,12 @@ class LaserInterpolationManager {
 					hasDrawn = false
 					for (let c = 0; c < interLenFraction; c++) {
 						if ((interLen + (interpolation.frame - c)) % interLen === b || b === (interpolation.frame + c) % interpolation.interpolation_len) {
-							window.laserDisplay.drawLine(context, currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y, interpolation.hex, 1);
+							if(currentPoint.hex != "000") window.laserDisplay.drawLine(context, currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y, interpolation.hex, 1);
 							hasDrawn = true;
 							break;
 						}
 					}
-					if (!hasDrawn) window.laserDisplay.drawLine(context, currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y, interpolation.hex, 0.6);
+					if (!hasDrawn) if(currentPoint.hex != "000") window.laserDisplay.drawLine(context, currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y, interpolation.hex, 0.6);
 				}
 				interpolation.frame = (interpolation.frame + 1) % interpolation.interpolation_len;
 			}

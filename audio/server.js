@@ -16,65 +16,67 @@ let bodyParser = require('body-parser')
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get('/', function(req, res){
-    res.sendFile("frontend/dist/index.html", {root: "../"});
+app.get('/', function (req, res) {
+	res.sendFile("frontend/dist/index.html", { root: "../" });
 });
 
-app.get('/show.html', function(req, res){
-    res.sendFile("frontend/dist/show.html", {root: "../"});
+app.get('/show.html', function (req, res) {
+	res.sendFile("frontend/dist/show.html", { root: "../" });
 });
-app.get('/points.html', function(req, res){
-    res.sendFile("frontend/dist/points.html", {root: "../"});
+app.get('/points.html', function (req, res) {
+	res.sendFile("frontend/dist/points.html", { root: "../" });
 });
 
 app.post('/search', function (req, res) {
+	console.log("TRYING")
+	fetcher.getSong(req.body.song, res, function (res) {
+		console.log("Sending response");
+		metadata = JSON.parse(fs.readFileSync("download/metadata.json"));
 
-    fetcher.getSong(req.body.song, res, function(res){
-        console.log("Sending response");
-        metadata = JSON.parse(fs.readFileSync("download/metadata.json"));
+		let folder = metadata.filename.replace("download/", "").replace(".mp3", "");
 
-        let folder = metadata.filename.replace("download/", "").replace(".mp3", "");
+		fs.mkdirSync("songs/" + folder, { recursive: true });
 
-        fs.mkdirSync("songs/"+folder, {recursive: true});
+		fs.readdir("./download/", (err, files) => {
+			for (let file of files) {
+				fs.renameSync("./download/" + file, "./songs/" + folder + "/" + file);
+			}
+		});
 
-        fs.readdir("./download/", (err, files) => {
-            for(let file of files){
-                fs.renameSync("./download/"+file, "./songs/"+folder+"/"+file);
-            }
-        });
+		metadata.filename = "songs/" + folder + "/" + metadata.filename.replace("download", "");
 
-        metadata.filename = "songs/"+folder+"/"+metadata.filename.replace("download", "");
-
-        console.log(metadata.filename);
-        res.status(201);
-        res.end(JSON.stringify(metadata));
-    });
+		console.log(metadata.filename);
+		res.status(201);
+		res.end(JSON.stringify(metadata));
+	});
 });
 
 app.post('/save', function (req, res) {
+	fs.writeFileSync(`songs/${req.body.show}/instructions-${req.body.version}.json`, JSON.stringify(req.body.instructions));
+	res.sendStatus(200);
+});
 
-    fs.writeFileSync("songs/"+req.body.show+"/instructions-"+req.body.version+".json", JSON.stringify(req.body.instructions));
-    res.sendStatus(200);
+app.post('/metadata', function (req, res) {
+
+	fs.writeFileSync("songs/" + req.body.show + "/metadata.json", JSON.stringify(req.body.metadata));
+	res.send(JSON.parse(fs.readFileSync("songs/" + req.body.show + "/metadata.json")));
 
 });
 
-app.post('/metadata', function(req, res){
-
-    fs.writeFileSync("songs/"+req.body.show+"/metadata.json", JSON.stringify(req.body.metadata));
-    res.send(JSON.parse(fs.readFileSync("songs/"+req.body.show+"/metadata.json")));
-
+app.get('/mp3', function (req, res) {
+	res.sendFile("songs/" + req.query.show + "/" + req.query.show + ".mp3", { root: "./" });
 });
 
-app.get('/mp3', function (req, res){
-    res.sendFile("songs/"+req.query.show+"/"+req.query.show+".mp3", {root: "./"});
+app.get('/instructions', function (req, res) {
+	try {
+		res.send(JSON.parse(fs.readFileSync("songs/" + req.query.show + "/instructions-" + req.query.version + ".json")));	
+	} catch(err){
+		res.send({});
+	}
 });
 
-app.get('/instructions', function (req, res){
-    res.send(JSON.parse(fs.readFileSync("songs/"+req.query.show+"/instructions-"+req.query.version+".json")));
-});
-
-app.get('/metadata', function (req, res){
-    res.send(JSON.parse(fs.readFileSync("songs/"+req.query.show+"/metadata.json")));
+app.get('/metadata', function (req, res) {
+	res.send(JSON.parse(fs.readFileSync("songs/" + req.query.show + "/metadata.json")));
 });
 
 console.log(`Listening on ${SERVER_PORT}...`);

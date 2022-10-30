@@ -118,5 +118,14 @@ class DeviceManager {
 
 		return newDevice;
 	}
+	findDeviceWithName(name){
+		for(const INPUT_TYPE in this.devices){
+			const INPUT_DEVICES = this.devices[INPUT_TYPE];
+			for(const INPUT_DEVICE of INPUT_DEVICES){
+				if(INPUT_DEVICE.name === name) return INPUT_DEVICE;
+			}
+		}
+		return false;
+	}
 }
 window.device = new DeviceManager();

@@ -1,0 +1,42 @@
+#nav {
+	display: flex;
+	padding-bottom: 0.5rem;
+}
+#saveBtn {
+	padding: 0.5rem 1rem;
+	margin-left: auto;
+	background: #1b1c1d;
+	color: #fff;
+	opacity: 0.4;
+	cursor: no-drop;
+}
+#saveBtn.active:hover {
+	opacity: 1;
+}
+#saveBtn.active {
+	cursor: pointer;
+	background: rgb(121, 168, 208);
+	opacity: 0.85;
+}
+#saveBtn.pending {
+	background: rgb(67, 143, 101);
+	cursor: wait;
+	opacity: 1;
+}
+
+#timestamp {
+	display: flex;
+	padding: 0.5rem 1rem;
+	color: #fff;
+	background: #1b1c1d;
+	cursor: pointer;
+}
+#timestamp.playing {
+	background: rgb(67, 143, 101);
+}
+#timestampStart {
+	padding-right: 0.5rem;
+}
+#timestampEnd {
+	padding-left: 0.5rem;
+}

@@ -2,7 +2,7 @@ class LaserDisplayManager {
 	INTERPOLATION_FPS = 10;
 	MAX_RGB_VALUE = 7;
 
-	downscaleFactor = 5;
+	downscaleFactor = 1;
 	CURRENT_COLOR = "";
 
 	designs = {};
@@ -91,7 +91,13 @@ class LaserDisplayManager {
 		};
 	}
 
-	registerDesign(name, URL) {
+	registerDesign(name, designConfig, URL) {
+		// Support 2 arguments only
+		if(typeof designConfig === "string") {
+			URL = designConfig;
+			designConfig = {};
+		}
+
 		const newOptionElement = tired.html.create(`<div class="laser-popup-option" data-value="${name}">${name}</div>`);
 		newOptionElement.addEventListener("click", function () {
 			laserInput.setValue(this.dataset.value);
@@ -102,8 +108,11 @@ class LaserDisplayManager {
 		const newLaserDisplay = {
 			URL: URL,
 			len: 0,
-			points: []
+			points: [],
+			config: designConfig
 		};
+
+		const scaleFactor = designConfig["scaleFactor"] ? designConfig["scaleFactor"] : 5;
 
 		const substringIndex = "?points=";
 		const urlPoints = decodeURIComponent(URL.substring(URL.indexOf(substringIndex) + substringIndex.length));
@@ -113,21 +122,24 @@ class LaserDisplayManager {
 		const goodPoints = Math.floor(savedPoints.length / pointData);
 		for (let a = 0; a < goodPoints; a++) {
 			newLaserDisplay.points.push(this.createPoint({
-				x: parseInt(savedPoints[a * pointData + 1]),
-				y: parseInt(savedPoints[a * pointData + 2])
+				x: parseInt(savedPoints[a * pointData + 1]) * scaleFactor + (30*(5-scaleFactor)),
+				y: parseInt(savedPoints[a * pointData + 2]) * scaleFactor + (30*(5-scaleFactor))
 			}, savedPoints[a * pointData], a));
 		}
 
 		// ["x-pos", "y-pos", "r", "g", "b"]
 		newLaserDisplay.instructions = {
-			r: [],
-			g: [],
-			b: []
+			"f00": [],
+			"0f0": [],
+			"00f": []
 		}
+		let MAX_RGB_VALUE = 0;
 		for(const point of newLaserDisplay.points){
-			newLaserDisplay.instructions.r.push([point.x, point.y, this.MAX_RGB_VALUE, 0, 0]);
-			newLaserDisplay.instructions.g.push([point.x, point.y, 0, this.MAX_RGB_VALUE, 0]);
-			newLaserDisplay.instructions.b.push([point.x, point.y, 0, 0, this.MAX_RGB_VALUE]);
+			if(point.hex === "000") MAX_RGB_VALUE = 0;
+			else MAX_RGB_VALUE = this.MAX_RGB_VALUE;
+			newLaserDisplay.instructions["f00"].push([point.x, point.y, MAX_RGB_VALUE, 0, 0]);
+			newLaserDisplay.instructions["0f0"].push([point.x, point.y, 0, MAX_RGB_VALUE, 0]);
+			newLaserDisplay.instructions["00f"].push([point.x, point.y, 0, 0, MAX_RGB_VALUE]);
 		}
 
 
@@ -162,6 +174,10 @@ class LaserDisplayManager {
 
 
 		this.designs[name] = newLaserDisplay;
+	}
+
+	getDesign(name){
+		return this.designs[name];
 	}
 
 	registerCanvas(name, canvas) {
