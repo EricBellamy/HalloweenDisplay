@@ -1,9 +1,9 @@
 const button = document.querySelector("#export");
 
-function convert_to_message(x, y){
+function convert_to_message(x, y, scaleFactor=5){
 
-	x = x*5;
-	y = y*5;
+	x = x*scaleFactor;
+	y = y*scaleFactor;
 
 	r = 7
 	g = 0

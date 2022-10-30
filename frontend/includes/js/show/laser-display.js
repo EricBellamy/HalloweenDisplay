@@ -2,7 +2,7 @@ class LaserDisplayManager {
 	INTERPOLATION_FPS = 10;
 	MAX_RGB_VALUE = 7;
 
-	downscaleFactor = 5;
+	downscaleFactor = 1;
 	CURRENT_COLOR = "";
 
 	designs = {};
@@ -113,6 +113,8 @@ class LaserDisplayManager {
 			config: designConfig
 		};
 
+		const scaleFactor = designConfig["scaleFactor"] ? designConfig["scaleFactor"] : 5;
+
 		const substringIndex = "?points=";
 		const urlPoints = decodeURIComponent(URL.substring(URL.indexOf(substringIndex) + substringIndex.length));
 		const savedPoints = urlPoints.split(",");
@@ -121,8 +123,8 @@ class LaserDisplayManager {
 		const goodPoints = Math.floor(savedPoints.length / pointData);
 		for (let a = 0; a < goodPoints; a++) {
 			newLaserDisplay.points.push(this.createPoint({
-				x: parseInt(savedPoints[a * pointData + 1]),
-				y: parseInt(savedPoints[a * pointData + 2])
+				x: parseInt(savedPoints[a * pointData + 1]) * scaleFactor + (30*(5-scaleFactor)),
+				y: parseInt(savedPoints[a * pointData + 2]) * scaleFactor + (30*(5-scaleFactor))
 			}, savedPoints[a * pointData], a));
 		}
 

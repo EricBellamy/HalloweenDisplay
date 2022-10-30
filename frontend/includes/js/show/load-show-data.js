@@ -559,6 +559,7 @@ async function loadShowData() {
 
 	for(const LASER_DESIGN_KEY in window.LASER_DESIGNS){
 		const LASER_DESIGN = window.LASER_DESIGNS[LASER_DESIGN_KEY];
+		console.log(LASER_DESIGN);
 		window.laserDisplay.registerDesign(LASER_DESIGN_KEY, LASER_DESIGN[0], LASER_DESIGN[1]);
 	}
 
