@@ -31,11 +31,13 @@ class LaserDisplayManager {
 		this.registerIconCanvas();
 	}
 
-	drawLine(context, startX, startY, endX, endY, color = "ffffff", alpha = 1, debug = false) {
-		startX *= this.downscaleFactor;
-		startY *= this.downscaleFactor;
-		endX *= this.downscaleFactor;
-		endY *= this.downscaleFactor;
+	drawLine(context, startX, startY, endX, endY, color = "ffffff", alpha = 1, ignoreDownscale = false) {
+		if(!this.ignoreDownscale){
+			startX *= this.downscaleFactor;
+			startY *= this.downscaleFactor;
+			endX *= this.downscaleFactor;
+			endY *= this.downscaleFactor;
+		}
 
 		// if (this.CURRENT_COLOR != color) {
 		// 	this.CURRENT_COLOR = color;
@@ -50,7 +52,7 @@ class LaserDisplayManager {
 		context.stroke();
 	}
 
-	renderCanvasLines(context, points) {
+	renderCanvasLines(context, points, ignoreDownscale = false) {
 		const pointsLen = points.length;
 		if (pointsLen <= 1) return;
 
@@ -59,12 +61,14 @@ class LaserDisplayManager {
 			point = points[a];
 			next = points[a + 1];
 
-			this.drawLine(context, point.x, point.y, next.x, next.y, point.hex);
+			this.drawLine(context, point.x, point.y, next.x, next.y, point.hex, ignoreDownscale);
 		}
+
+		// Draw line back to origin
 		if (2 < pointsLen) {
 			point = points[a];
 			next = points[0];
-			this.drawLine(context, point.x, point.y, next.x, next.y, point.hex);
+			this.drawLine(context, point.x, point.y, next.x, next.y, point.hex, ignoreDownscale);
 		}
 	}
 
@@ -131,6 +135,7 @@ class LaserDisplayManager {
 		if(newLaserDisplay.URL === "https://draw.halloween.ayyws.com/?points=fff%2C45%2C25%2Cfff%2C42%2C14%2Cfff%2C30%2C10%2Cfff%2C20%2C15%2Cfff%2C15%2C30%2Cfff%2C20%2C45%2Cfff%2C30%2C50%2Cfff%2C42%2C47%2Cfff%2C45%2C35%2Cfff%2C36%2C42%2Cfff%2C24%2C40%2Cfff%2C24%2C30%2Cfff%2C24%2C20%2Cfff%2C37%2C17"){
 			console.log(newLaserDisplay);
 			console.log(this.iconContext);
+			this.renderCanvasLines(this.iconContext, newLaserDisplay.points, true);
 		}
 
 		// ["x-pos", "y-pos", "r", "g", "b"]

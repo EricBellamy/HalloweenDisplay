@@ -48,8 +48,11 @@
 
 #laserIconCanvas {
 	position: fixed;
-	top: -1000px;
-	left: -1000px;
+	/* top: -1000px;
+	left: -1000px; */
+	top: 0;
+	left: 0;
 	width: 60px;
 	height: 60px;
+	z-index: 100;
 }
