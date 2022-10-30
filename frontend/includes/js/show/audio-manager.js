@@ -22,6 +22,11 @@ class AudioManager {
 		this.timestampEnd = document.querySelector("#timestampEnd");
 		this.timestamp = document.querySelector("#timestamp");
 
+		this.timestamp.addEventListener("click", function(){
+			if(this.playing) this.stop();
+			else this.play();
+		}.bind(this));
+
 		this.timestampStart.innerHTML = this.getFormattedTimestampFromSeconds(0);
 		this.timestampEnd.innerHTML = this.getFormattedTimestampFromSeconds(audio.duration);
 
@@ -52,6 +57,7 @@ class AudioManager {
 	// Hooks into the render loop, calculate when the playing audio needs to be paused
 	render(frameTime, firstRender = false) {
 		if (this.playing) {
+			this.updateTimestamp(this.audio.currentTime);
 			this.remainingTimeMs -= frameTime;
 
 			const beatIndex = this.calculateBeatIndexFromTimestamp();
@@ -93,6 +99,7 @@ class AudioManager {
 
 	startingHighlighterIndex = -1;
 	scrollWithHighlighter = false;
+	updateHighlighter = true;
 	updatePlayElements(){
 		this.timestamp.classList.toggle("playing", true);
 	}
@@ -105,12 +112,8 @@ class AudioManager {
 
 			// window.timeline.SONG.tempo --> The beats per minute
 			// window.timeline.SONG.duration --> The duration in seconds
-			console.log(this.startBeat);
 			this.startBeat = window.timeline.view.index;
 			this.stopBeat = this.startBeat + maxBeats;
-			console.log(this.stopBeat);
-			console.log(window.timeline.view.bpmScale);
-			console.log(window.timeline.SONG.bpmScale);
 
 			this.startBeatTime = this.calculateBeatTimestamp(this.startBeat);
 			this.stopBeatTime = this.calculateBeatTimestamp(this.stopBeat);
@@ -146,11 +149,14 @@ class AudioManager {
 
 		if(!this.playing) this.audio.play();
 		this.playing = true;
+
 		this.updatePlayElements();
 	}
 	updateTimestamp(seconds){
-		const formattedTime = this.getFormattedTimestampFromSeconds(seconds);
-
+		this.timestampStart.innerHTML = this.getFormattedTimestampFromSeconds(seconds);
+	}
+	updateTimestampFromIndex(index){
+		this.updateTimestamp(this.calculateBeatTimestamp(index));
 	}
 	getFormattedTimestampFromSeconds(seconds){
 		const minutes = Math.floor(seconds % 60);

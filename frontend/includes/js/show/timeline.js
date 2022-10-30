@@ -81,7 +81,9 @@ class Timeline {
 			const timelineIndex = Math.min(this.view.maxWindowCount, Math.max(0, Math.floor(timelineProgress * this.SONG.beatCount - this.view.max / 2)));
 			this.setIndex(timelineIndex);
 
-			window.audio.playSingle();
+			// window.audio.playSingle();
+			window.audio.stop();
+			window.audio.updateTimestampFromIndex(window.timeline.view.index);
 		}.bind(this));
 
 		document.addEventListener("mouseup", function () {
@@ -97,7 +99,9 @@ class Timeline {
 
 				this.setIndex(timelineIndex);
 
-				window.audio.playSingle();
+				// window.audio.playSingle();
+				window.audio.stop();
+				window.audio.updateTimestampFromIndex(window.timeline.view.index);
 			}
 		}.bind(this), 1000 / this.view.minimapFps, {
 			leading: true,
