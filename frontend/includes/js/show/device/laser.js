@@ -31,6 +31,10 @@ laserInput.activate = function (beatX, beatY, beatBounds, device) {
 }
 
 laserInput.render = function (device, value) {
+	device.params.colorOptions[device.params.colorIndex].classList.toggle("active", false);
+	device.params.colorOptions[value.colorIndex].classList.toggle("active", true);
+	device.params.colorIndex = value.colorIndex;
+	
 	device.value = value.value;
 	window.LaserInterpolationManager.activate(device.name, value.value, value.hex, window.laserDisplay.getContext(device.name));
 }
