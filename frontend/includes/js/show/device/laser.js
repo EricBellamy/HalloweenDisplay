@@ -120,6 +120,8 @@ function addLaserDevice(elementTag) {
 addLaserDevice("laser-1");
 addLaserDevice("laser-2");
 addLaserDevice("laser-3");
+addLaserDevice("laser-4");
+addLaserDevice("laser-5");
 
 // Register the designs
 // window.laserDisplay.registerDesign("shuriken", {
