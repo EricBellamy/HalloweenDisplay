@@ -11,24 +11,26 @@ const mousePos = document.querySelector("#mousePos");
 const rightColumn = document.querySelector("#right");
 const pointsContainer = document.querySelector("#points");
 
+let scale;
+function calculateVariables() {
+	// Bounds
+	const rightColumnBounds = rightColumn.getBoundingClientRect();
 
-// Bounds
-const rightColumnBounds = rightColumn.getBoundingClientRect();
 
+	// Initialize the canvas
+	const canvasPadding = parseInt(getComputedStyle(document.querySelector("#container")).padding);
+	scale = Math.min(
+		Math.floor((window.innerWidth - canvasPadding - rightColumnBounds.width) / canvasResolution),
+		Math.floor((window.innerHeight - canvasPadding) / canvasResolution)
+	);
+	const canvasSize = canvasResolution * scale;
 
-// Initialize the canvas
-const canvasPadding = parseInt(getComputedStyle(document.querySelector("#container")).padding);
-const scale = Math.min(
-	Math.floor((window.innerWidth - canvasPadding - rightColumnBounds.width) / canvasResolution),
-	Math.floor((window.innerHeight - canvasPadding) / canvasResolution)
-);
-const canvasSize = canvasResolution * scale;
-
-canvas.width = canvasSize;
-canvas.style.width = `${canvasSize}px`;
-canvas.height = canvasSize;
-canvas.style.height = `${canvasSize}px`;
-
+	canvas.width = canvasSize;
+	canvas.style.width = `${canvasSize}px`;
+	canvas.height = canvasSize;
+	canvas.style.height = `${canvasSize}px`;
+}
+calculateVariables();
 
 // Rendering functions
 let CURRENT_COLOR = "";
@@ -61,7 +63,7 @@ function drawPoint(x, y, hex, alpha = 1, POINT_SCALE = 1) {
 		CURRENT_FILL = hex;
 		CURRENT_ALPHA = alpha;
 	};
-	
+
 	const pointSize = POINT_SIZE * downscaleFactor * scale * POINT_SCALE;
 	context.fillRect((x * downscaleFactor * scale) - pointSize / 2, (y * downscaleFactor * scale) - pointSize / 2, pointSize, pointSize);
 }
@@ -89,19 +91,19 @@ function getMousePoint(event) {
 	}
 }
 
-function hexToRgba(hex, alpha = 1){
-	if(hex[0] != "#") hex = "#" + hex;
+function hexToRgba(hex, alpha = 1) {
+	if (hex[0] != "#") hex = "#" + hex;
 
-    var c;
-    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-        c= hex.substring(1).split('');
-        if(c.length== 3){
-            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-        }
-        c= '0x'+c.join('');
-		return `rgba(${[(c>>16)&255, (c>>8)&255, c&255].join(',')},${alpha})`;
-    }
-    return false;
+	var c;
+	if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+		c = hex.substring(1).split('');
+		if (c.length == 3) {
+			c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+		}
+		c = '0x' + c.join('');
+		return `rgba(${[(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',')},${alpha})`;
+	}
+	return false;
 }
 
 
@@ -123,7 +125,7 @@ function renderCanvas(event, left = false) {
 	const matched = renderCanvasPoints(LAST_MOUSE_POINT);
 
 	// Draw mouse indicator
-	if(!left && !matched) drawPoint(LAST_MOUSE_POINT.x, LAST_MOUSE_POINT.y, "fff", 0.4);
+	if (!left && !matched) drawPoint(LAST_MOUSE_POINT.x, LAST_MOUSE_POINT.y, "fff", 0.4);
 }
 
 
@@ -138,9 +140,9 @@ function pointExists(coord) {
 		} else point.alpha = "ff";
 	}
 }
-function deletePoint(coord){
-	for(let a = 0; a < points.length; a++){
-		if(points[a].x === coord.x && points[a].y === coord.y){
+function deletePoint(coord) {
+	for (let a = 0; a < points.length; a++) {
+		if (points[a].x === coord.x && points[a].y === coord.y) {
 			points.splice(a, 1);
 
 			renderPointList();
@@ -153,7 +155,7 @@ function deletePoint(coord){
 
 let pointIndex = 0;
 function createPoint(coord, hex = "fff") {
-	if(deletePoint(coord)) return;
+	if (deletePoint(coord)) return;
 	points.push({
 		id: new Date().getTime() + "|" + pointIndex,
 		hex: hex,
@@ -183,9 +185,9 @@ function movePoint(pointRef, direction) {
 	encodeURI();
 	renderPointList();
 }
-function updatePointElement(point){
+function updatePointElement(point) {
 	const rgbaVal = hexToRgba(point.ele.hex.value);
-	if(rgbaVal != false){
+	if (rgbaVal != false) {
 		point.ele.hex.style.color = `#${point.ele.hex.value}`;
 		point.ele.background.style.background = `#${point.ele.hex.value}`;
 	}
@@ -214,35 +216,35 @@ function renderPointList() {
 			background: parts[1]
 		};
 
-		pointEle.addEventListener("mouseover", function(event){
+		pointEle.addEventListener("mouseover", function (event) {
 			LAST_MOUSE_POINT.x = this.x;
 			LAST_MOUSE_POINT.y = this.y;
 			renderCanvas();
 		}.bind(point));
-		pointEle.addEventListener("mouseleave", function(event){
+		pointEle.addEventListener("mouseleave", function (event) {
 			LAST_MOUSE_POINT.x = -1;
 			LAST_MOUSE_POINT.y = -1;
 			renderCanvas();
 		}.bind(point));
 
-		hex.addEventListener("input", function(event){
-			if(6 < event.target.value.length) event.target.value = event.target.value.substring(0, 6);
+		hex.addEventListener("input", function (event) {
+			if (6 < event.target.value.length) event.target.value = event.target.value.substring(0, 6);
 
 			this.hex = event.target.value;
 			updatePointElement(this);
 			encodeURI();
 			renderCanvas();
 		}.bind(point));
-		hex.addEventListener("focus", function(pointRef, event){
+		hex.addEventListener("focus", function (pointRef, event) {
 			const that = this;
-			setTimeout(function(){ that.selectionStart = that.selectionEnd = 10000; }, 0);
+			setTimeout(function () { that.selectionStart = that.selectionEnd = 10000; }, 0);
 
 			LAST_MOUSE_POINT.x = pointRef.x;
 			LAST_MOUSE_POINT.y = pointRef.y;
 			renderCanvas();
 		}.bind(hex, point));
 
-		hex.addEventListener("blur", function(pointRef, event){
+		hex.addEventListener("blur", function (pointRef, event) {
 			LAST_MOUSE_POINT.x = -1;
 			LAST_MOUSE_POINT.y = -1;
 			renderCanvas();
@@ -259,37 +261,37 @@ function renderPointList() {
 	}
 	renderCanvas();
 }
-function renderCanvasPoints(mousePoint = false){
+function renderCanvasPoints(mousePoint = false) {
 	let matchedCanvasPoint = false;
 	for (const point of points) {
-		if(mousePoint != false && (mousePoint.x === point.x && mousePoint.y === point.y)){
+		if (mousePoint != false && (mousePoint.x === point.x && mousePoint.y === point.y)) {
 			matchedCanvasPoint = true;
 			drawPoint(point.x, point.y, point.hex, 0.6, 3);
 		} else drawPoint(point.x, point.y, point.hex);
 	}
 	return matchedCanvasPoint;
 }
-function renderCanvasLines(){
+function renderCanvasLines() {
 	const pointsLen = points.length;
-	if(pointsLen <= 1) return;
+	if (pointsLen <= 1) return;
 
 	let point, next, a;
-	for(a = 0; a < pointsLen - 1; a++){
+	for (a = 0; a < pointsLen - 1; a++) {
 		point = points[a];
 		next = points[a + 1];
 
 		drawLine(point.x, point.y, next.x, next.y, point.hex);
 	}
-	if(2 < pointsLen){
+	if (2 < pointsLen) {
 		point = points[a];
 		next = points[0];
 		drawLine(point.x, point.y, next.x, next.y, point.hex);
 	}
 }
 
-function encodeURI(){
+function encodeURI() {
 	let pointString = "";
-	for(const point of points){
+	for (const point of points) {
 		pointString += `${point.hex},${point.x},${point.y},`;
 	}
 	pointString = pointString.substring(0, pointString.length - 1);
@@ -299,15 +301,15 @@ function encodeURI(){
 	params.toString(); // => points=fff|1|2
 	window.history.pushState({}, '', `${location.pathname}?${params.toString()}`);
 }
-function loadURI(){
+function loadURI() {
 	points = [];
 	const savedPointInfo = new URLSearchParams(location.search).get("points");
-	if(savedPointInfo != null){
+	if (savedPointInfo != null) {
 		const savedPoints = savedPointInfo.split(",");
-		
+
 		const pointData = 3;
 		const goodPoints = Math.floor(savedPoints.length / pointData);
-		for(let a = 0; a < goodPoints; a++){
+		for (let a = 0; a < goodPoints; a++) {
 			createPoint({
 				x: parseInt(savedPoints[a * pointData + 1]),
 				y: parseInt(savedPoints[a * pointData + 2])
@@ -320,6 +322,16 @@ window.addEventListener('popstate', (event) => {
 	loadURI();
 	renderCanvas();
 });
+
+function resize(){
+	calculateVariables();
+	renderCanvas();
+}
+tired.resize.addEvent(function(){
+	console.log("RESIZING POINTS!");
+	resize();
+});
+tired.resize.watch(5);
 
 loadURI();
 renderCanvas();

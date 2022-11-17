@@ -52,8 +52,12 @@ app.post('/search', function (req, res) {
 });
 
 app.post('/save', function (req, res) {
-	fs.writeFileSync(`songs/${req.body.show}/instructions-${req.body.version}.json`, JSON.stringify(req.body.instructions));
-	res.sendStatus(200);
+	if (req.body.version != 'demo') {
+		fs.writeFileSync(`songs/${req.body.show}/instructions-${req.body.version}.json`, JSON.stringify(req.body.instructions));
+		res.sendStatus(200);
+	} else {
+		res.sendStatus(500);
+	}
 });
 
 app.post('/metadata', function (req, res) {
@@ -69,8 +73,8 @@ app.get('/mp3', function (req, res) {
 
 app.get('/instructions', function (req, res) {
 	try {
-		res.send(JSON.parse(fs.readFileSync("songs/" + req.query.show + "/instructions-" + req.query.version + ".json")));	
-	} catch(err){
+		res.send(JSON.parse(fs.readFileSync("songs/" + req.query.show + "/instructions-" + req.query.version + ".json")));
+	} catch (err) {
 		res.send({});
 	}
 });

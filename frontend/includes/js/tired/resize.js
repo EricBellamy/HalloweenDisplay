@@ -1,8 +1,11 @@
 window.tired.resize = {
 	events: [],
 	debouncedResize: false,
-	watch: function (fps) {
-		const msDelay = 1000 / fps;
+	addEvent: function(callback){
+		this.events.push(callback);
+	},
+	watch: function (fps = 1) {
+		const msDelay = Math.floor(1000 / fps);
 		if (window.tired.resize.debouncedResize) {
 			window.removeEventListener("resize", window.tired.resize.debouncedResize, true);
 		}
