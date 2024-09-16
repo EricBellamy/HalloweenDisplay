@@ -41,7 +41,9 @@ async function loadShowData() {
 	for(key in window.laserDisplay.designs) {
 		laserDesignPoints[key] = [];
 		const points = window.laserDisplay.designs[key].points;
-		for(const point of points) laserDesignPoints[key].push([point.x, point.y]);
+		for(const point of points) {
+			laserDesignPoints[key].push({ hex: point.hex, alpha: point.alpha, x: point.x, y: point.y });
+		}
 	}
 	console.log(laserDesignPoints);
 
