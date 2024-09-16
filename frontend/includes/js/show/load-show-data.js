@@ -38,7 +38,11 @@ async function loadShowData() {
 	}
 
 	let laserDesignPoints = {};
-	for(key in window.laserDisplay.designs) laserDesignPoints[key] = window.laserDisplay.designs[key].points;
+	for(key in window.laserDisplay.designs) {
+		laserDesignPoints[key] = [];
+		const points = window.laserDisplay.designs[key].points;
+		for(const point of points) laserDesignPoints[key].push([point.x, point.y]);
+	}
 	console.log(laserDesignPoints);
 
 	window.timeline.SONG = JSON.parse(JSON.stringify(window.SHOW_META));
