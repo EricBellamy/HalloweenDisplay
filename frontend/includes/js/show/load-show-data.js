@@ -37,6 +37,10 @@ async function loadShowData() {
 		window.laserDisplay.registerDesign(LASER_DESIGN_KEY, LASER_DESIGN[0], LASER_DESIGN[1]);
 	}
 
+	let laserDesignPoints = {};
+	for(key in window.laserDisplay.designs) laserDesignPoints[key] = window.laserDisplay.designs[key].points;
+	console.log(laserDesignPoints);
+
 	window.timeline.SONG = JSON.parse(JSON.stringify(window.SHOW_META));
 	window.timeline.SONG.duration = window.audio.getDuration();
 	window.timeline.SONG.instructions = JSON.parse(window.SHOW_INSTRUCTIONS);
