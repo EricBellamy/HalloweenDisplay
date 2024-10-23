@@ -12,25 +12,29 @@
 <body>
 	<div id="ShowVertContainer">
 		<div id="ShowHorzContainer">
-			<include src="show/nav.html" />
+			<div id="ShowRightColumn" class="column">
+				<include src="show/nav.html" />
 
-			<div id="display">
-				<include src="show/popups.css" />
+				<div id="display">
+					<include src="show/popups.css" />
 
-				<include src="show/lasers.html" />
-				<include src="show/lights.html" />
-			</div>
-			<div id="minimapContainer">
-				<div id="minimapWindow"></div>
-				<canvas id="minimap"></canvas>
-			</div>
-			<div id="timeline">
-				<div id="timelineSidebar">
-
+					<include src="show/lasers.html" />
+					<include src="show/lights.html" />
 				</div>
-				<div id="timelineContent">
-					<div id="timelineEvents"></div>
-					<div id="timelineBackground"></div>
+			</div>
+			<div id="ShowLeftColumn" class="column">
+				<div id="minimapContainer">
+					<div id="minimapWindow"></div>
+					<canvas id="minimap"></canvas>
+				</div>
+				<div id="timeline">
+					<div id="timelineSidebar">
+
+					</div>
+					<div id="timelineContent">
+						<div id="timelineEvents"></div>
+						<div id="timelineBackground"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -78,7 +82,6 @@
 
 	<script>
 		tired.resize.addEvent(function(){
-			console.log("RESIZING SHOW!");
 			window.timeline.resize();
 			window.timeline.updateMinimapWindowSize();
 			window.timeline.render();

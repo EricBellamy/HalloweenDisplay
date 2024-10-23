@@ -164,9 +164,7 @@ class Timeline {
 		let displayBounds = this.ele.display.getBoundingClientRect();
 		let remainingHeight = Math.floor(
 			this.ele.container.getBoundingClientRect().height -
-			(displayBounds.height +
-				this.ele.minimap.getBoundingClientRect().height +
-				this.ele.nav.getBoundingClientRect().height +
+			(this.ele.minimap.getBoundingClientRect().height +
 				parseInt(window.getComputedStyle(this.ele.minimapContainer).marginBottom) +
 				parseInt(window.getComputedStyle(this.ele.container).paddingTop) +
 				parseInt(window.getComputedStyle(this.ele.container).paddingBottom))

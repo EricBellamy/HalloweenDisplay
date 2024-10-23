@@ -328,7 +328,6 @@ function resize(){
 	renderCanvas();
 }
 tired.resize.addEvent(function(){
-	console.log("RESIZING POINTS!");
 	resize();
 });
 tired.resize.watch(5);

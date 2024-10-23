@@ -6,7 +6,7 @@ Fog Machine:
 - ON/OFF toggle
 
 Lights:
-- Add 2-4 more channels
+[DONE] - Add 2-4 more channels
 - Right click the OFF state to set to FLASH state
 
 
