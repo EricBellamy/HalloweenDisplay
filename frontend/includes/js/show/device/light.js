@@ -33,14 +33,14 @@ floatInput.render = function (device, value) {
 	device.element.style.background = "#fff";
 	device.element.style.opacity = value / 100;
 }
-floatInput.unRender = function(device){
+floatInput.unRender = function (device) {
 	device.element.style.background = null;
 	device.element.style.opacity = null;
 }
-floatInput.import = function(event){
+floatInput.import = function (event) {
 	window.timeline.addManualEvent(event.value * 100, event.device, event.beatIndex)
 }
-floatInput.export = function(event){
+floatInput.export = function (event) {
 	return event.value / 100;
 }
 
@@ -60,10 +60,7 @@ window.popups.float = floatInput;
 
 
 // Register the lights
-window.device.addDevice("light", "float", document.querySelector("#light-1"), "438f65");
-window.device.addDevice("light", "float", document.querySelector("#light-2"), "438f65");
-window.device.addDevice("light", "float", document.querySelector("#light-3"), "438f65");
-window.device.addDevice("light", "float", document.querySelector("#light-4"), "438f65");
-window.device.addDevice("light", "float", document.querySelector("#light-5"), "438f65");
-window.device.addDevice("light", "float", document.querySelector("#light-6"), "438f65");
-window.device.addDevice("light", "float", document.querySelector("#light-7"), "438f65");
+const lights = document.querySelectorAll('#lights .light');
+for (let i = 0; i < lights.length; i++) {
+	window.device.addDevice("light", "float", lights[i], "438f65");
+}

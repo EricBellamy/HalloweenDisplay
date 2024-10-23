@@ -80,6 +80,7 @@
 		tired.resize.addEvent(function(){
 			console.log("RESIZING SHOW!");
 			window.timeline.resize();
+			window.timeline.updateMinimapWindowSize();
 			window.timeline.render();
 		});
 		tired.resize.watch(2);
