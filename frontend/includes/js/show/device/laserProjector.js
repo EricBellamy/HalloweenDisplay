@@ -67,6 +67,7 @@ laserProjectorInput.export = function (event) {
 	if (event.value === 0) return event.value;
 
 	const value = event.value;
+	delete value.value;
 	const currentPattern = window.laserProjectorPatterns[value.patternChoice];
 	const currentColor = window.laserProjectorColorOptions[value.colorChoice];
 
