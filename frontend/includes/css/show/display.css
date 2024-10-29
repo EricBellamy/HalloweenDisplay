@@ -34,6 +34,10 @@ body {
 #ShowLeftColumn {
 	order: -1;
 }
+#ShowLeftColumn > .top {
+	display: flex;
+	margin-bottom: 20px;
+}
 
 .hidden {
 	display: none !important;

@@ -138,7 +138,6 @@ class Timeline {
 		this.view.maxWindowCount = window.timeline.SONG.beatCount - window.timeline.view.max;
 
 		this.ele.minimap.width = minimapBounds.width * this.view.minimapScale;
-		this.ele.minimap.height = this.rows * this.view.beatWidth * this.view.minimapScale;
 
 
 		let minimapBeatHeight = this.rows * this.view.beatWidth;

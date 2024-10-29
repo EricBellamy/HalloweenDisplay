@@ -13,19 +13,23 @@
 	<div id="ShowVertContainer">
 		<div id="ShowHorzContainer">
 			<div id="ShowRightColumn" class="column">
-				<include src="show/nav.html" />
-
 				<div id="display">
 					<include src="show/popups.css" />
 
 					<include src="show/lasers.html" />
 					<include src="show/lights.html" />
+					<include src="show/fog-machines.html" />
 				</div>
 			</div>
 			<div id="ShowLeftColumn" class="column">
-				<div id="minimapContainer">
-					<div id="minimapWindow"></div>
-					<canvas id="minimap"></canvas>
+				<div class="top">
+					<include src="show/nav.html" />
+					<div id="minimapWrapper">
+						<div id="minimapContainer">
+							<div id="minimapWindow"></div>
+							<canvas id="minimap"></canvas>
+						</div>
+					</div>
 				</div>
 				<div id="timeline">
 					<div id="timelineSidebar">
@@ -52,6 +56,10 @@
 
 	<include src="show/laser-interpolations.js" />
 	<include src="show/laser-display.js" />
+
+	<include src="show/device/laserProjectorPatterns.js" />
+	<include src="show/device/laserProjector.js" />
+
 	<include src="show/device/laser.js" />
 	<include src="show/device/light.js" />
 
@@ -81,7 +89,7 @@
 	<include src="show/nav.js" />
 
 	<script>
-		tired.resize.addEvent(function(){
+		tired.resize.addEvent(function () {
 			window.timeline.resize();
 			window.timeline.updateMinimapWindowSize();
 			window.timeline.render();

@@ -1,0 +1,67 @@
+#extraMachines .laser {
+	display: flex;
+	margin-right: 0;
+}
+#extraMachines .laser-canvas {
+	width: 100%;
+}
+#extraMachines .laser-color-options {
+	flex: 1;
+	flex-direction: column;
+}
+
+
+
+
+
+
+#laserProjectorPopup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	color: #fff;
+	text-align: center;
+}
+#laserProjectorPopup:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #00000099;
+	z-index: -1;
+}
+#laserProjectorPopup .title {
+	font-size: 20px;
+	padding-top: 40px;
+}
+#laserProjectorPopup .patterns {
+	display: flex;
+	flex-wrap: wrap;
+}
+#laserProjectorPopup .patterns .pattern {
+	padding: 10px;
+}
+#laserProjectorPopup .current {
+	padding: 20px;
+}
+#laserProjectorPopup .choices {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}
+#laserProjectorPopup .close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 30px;
+	cursor: pointer;
+	transform: scale(1.2);
+}
+#laserProjectorPopup select {
+	padding: 1rem;
+}

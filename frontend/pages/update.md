@@ -1,6 +1,6 @@
 Display:
-[LEFT COLUMN] Minimap & controls
-[RIGHT COLUMN] Displays
+[DONE] [LEFT COLUMN] Minimap & controls
+[DONE] [RIGHT COLUMN] Displays
 
 Fog Machine:
 - ON/OFF toggle
