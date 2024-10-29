@@ -88,7 +88,6 @@ window.popups.laserProjectorPopup = laserProjectorInput;
 
 function addLaserDevice(elementTag) {
 	const laserEle = document.getElementById(elementTag);
-	const laserEleOptions = laserEle.querySelectorAll(".laser-color-option");
 
 	const newLaserDevice = window.device.addDevice("lp", "laserProjectorPopup", laserEle, "A867FF", { patternChoice: 'Large_Square', colorChoice: 'default' });
 }

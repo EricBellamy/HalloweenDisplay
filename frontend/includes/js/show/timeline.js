@@ -387,7 +387,17 @@ class Timeline {
 	toggleInput(x, y, bounds) {
 		const targetDevice = window.device.findAt(y);
 		const input = this.toggleInputLogic(x, y, bounds);
-		input.activate(x, y, bounds, targetDevice);
+
+		let lastEvent = false;
+		for(let newX = x; 0 <= newX; newX--){
+			let targetLastEvent = this.events[newX];
+			if(targetLastEvent && targetLastEvent[[targetDevice]]) {
+				lastEvent = targetLastEvent;
+				break;
+			}
+		}
+
+		input.activate(x, y, bounds, targetDevice, lastEvent);
 	}
 	toggleInputLogic(x, y, bounds) {
 		const targetDevice = window.device.findAt(y);
