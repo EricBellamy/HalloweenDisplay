@@ -140,7 +140,7 @@
 
 .beat.flashing {
 	border: 2px dotted #000;
-	animation: flash 1s linear 0s infinite alternate;
+	animation: flash 1.6s linear 0s infinite alternate;
 }
 .beat.idle {
 	background: #232328;
