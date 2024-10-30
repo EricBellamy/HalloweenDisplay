@@ -99,6 +99,11 @@ function initInput(input) {
 			tilt: params.tilt,
 			state: params.state
 		});
+
+		// Make it so that when values are added they are only 1 beat long
+		const input = window.timeline.toggleInputLogic(parseInt(this.current.x) + 1, parseInt(this.current.y), this.current.bounds);
+		input.setValue(0);
+		window.timeline.addEvent(0);
 	}.bind(input);
 
 	input.activate = function (beatX, beatY, beatBounds, device, lastEvent) { // Open popup
