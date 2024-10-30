@@ -1,0 +1,59 @@
+#lightTurretPopup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	color: #fff;
+	text-align: center;
+}
+
+#lightTurretPopup:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #00000099;
+	z-index: -1;
+}
+#lightTurretPopup .title {
+	font-size: 20px;
+	padding: 40px 0;
+}
+
+
+#lightTurretPopup .choices {
+	max-width: 140px;
+	margin: 0 auto;
+}
+#lightTurretPopup .item {
+	margin-bottom: 40px;
+	display: flex;
+	flex-direction: column;
+}
+#lightTurretPopup .label {
+	margin-bottom: 10px;
+}
+#lightTurretPopup #states {
+	display: flex;
+}
+#lightTurretPopup #states .state {
+	padding: 20px;
+	margin-right: 10px;
+	background: #ffffff33;
+	cursor: pointer;
+}
+#lightTurretPopup #states .state.active {
+	background: #008754aa;
+}
+#lightTurretPopup .close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 30px;
+	cursor: pointer;
+	transform: scale(1.2);
+}

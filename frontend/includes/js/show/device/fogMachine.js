@@ -17,6 +17,8 @@ fogMachineInput.deactivate = function (close = false) {
 
 fogMachineInput.activate = function (beatX, beatY, beatBounds, device, lastEvent) { // Open popup
 	console.log('ACTIVATE!');
+	console.log(device);
+	// fogMachineInput.current.device.params.running
 	fogMachineInput.current.device.params.running = 1;
 	fogMachineInput.deactivate();
 }
@@ -30,7 +32,7 @@ fogMachineInput.import = function (event) {
 		const eventValue = event.value.value;
 		window.timeline.addManualEvent({
 			value: eventValue,
-			patternChoice: eventValue.running
+			running: eventValue.running
 		}, event.device, event.beatIndex);
 	}
 }
@@ -38,10 +40,11 @@ fogMachineInput.export = function (event) {
 	if (event.value === 0) return event.value;
 
 	const value = event.value;
+	delete value.value;
 
 	const EXPORT_OBJECT = {
 		value: value,
-		patternChoice: value.running
+		running: value.running
 	};
 
 	return EXPORT_OBJECT;

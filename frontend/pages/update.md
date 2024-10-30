@@ -3,7 +3,7 @@ Display:
 [DONE] [RIGHT COLUMN] Displays
 
 Fog Machine:
-- ON/OFF toggle
+[DONE] - ON/OFF toggle
 
 Lights:
 [DONE] - Add 2-4 more channels
@@ -11,7 +11,7 @@ Lights:
 
 
 New Laser:
-- Same overlay toggle & control system as other lasers
+[DONE] - Same overlay toggle & control system as other lasers
 
 
 Light Turrets:

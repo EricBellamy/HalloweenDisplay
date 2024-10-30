@@ -28,6 +28,10 @@ laserInput.deactivate = function (close = false) {
 }
 laserInput.activate = function (beatX, beatY, beatBounds, device) {
 	this.element.classList.toggle("hidden", false);
+
+	window.CURRENT_CLOSE_ACTION = function () {
+		laserInput.element.classList.toggle("hidden", true);
+	};
 }
 
 laserInput.render = function (device, value) {

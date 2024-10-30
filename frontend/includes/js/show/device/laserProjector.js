@@ -45,6 +45,11 @@ laserProjectorInput.activate = function (beatX, beatY, beatBounds, device) { // 
 	laserProjectorInput.patternElement.value = '';
 	laserProjectorInput.colorElement.value = '';
 	this.popupElement.classList.toggle("hidden", false);
+
+	// Set close action
+	window.CURRENT_CLOSE_ACTION = function(){
+		laserProjectorInput.popupElement.classList.toggle("hidden", true);
+	};
 }
 
 laserProjectorInput.render = function (device, value) { }
