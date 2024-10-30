@@ -101,9 +101,13 @@ function initInput(input) {
 		});
 
 		// Make it so that when values are added they are only 1 beat long
-		const input = window.timeline.toggleInputLogic(parseInt(this.current.x) + 1, parseInt(this.current.y), this.current.bounds);
+		let parsedX = parseInt(this.current.x);
+		let parsedY = parseInt(this.current.y);
+		const input = window.timeline.toggleInputLogic(parsedX + 1, parsedY, this.current.bounds);
 		input.setValue(0);
 		window.timeline.addEvent(0);
+
+		window.timeline.toggleInputLogic(parsedX, parsedY, this.current.bounds);
 	}.bind(input);
 
 	input.activate = function (beatX, beatY, beatBounds, device, lastEvent) { // Open popup
