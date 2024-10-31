@@ -111,10 +111,11 @@ function initInput(input) {
 	}.bind(input);
 
 	input.activate = function (beatX, beatY, beatBounds, device, lastEvent) { // Open popup
-		input.popupElement.elements.pan.value = 0;
-		input.popupElement.elements.pan.setValue(0);
-		input.popupElement.elements.tilt.value = 0;
-		input.popupElement.elements.tilt.setValue(0);
+		console.log();
+		input.popupElement.elements.pan.value = device.params.pan;
+		input.popupElement.elements.pan.setValue(device.params.pan);
+		input.popupElement.elements.tilt.value = device.params.tilt;
+		input.popupElement.elements.tilt.setValue(device.params.tilt);
 
 		input.popupElement.elements.states[0].classList.toggle("active", false);
 		input.popupElement.elements.states[1].classList.toggle("active", false);
