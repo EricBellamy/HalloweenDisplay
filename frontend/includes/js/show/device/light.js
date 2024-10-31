@@ -28,6 +28,11 @@ floatInput.activate = function (beatX, beatY, beatBounds, device) {
 	this.element.style.height = `${beatBounds.width}px`;
 
 	this.elementParts[0].focus();
+
+	window.CURRENT_CLOSE_ACTION = function () {
+		floatInput.element.classList.toggle("hidden", true);
+		floatInput.elementParts[0].blur();
+	};
 }
 
 floatInput.render = function (device, value) {
