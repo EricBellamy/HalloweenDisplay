@@ -1,4 +1,4 @@
-// 0 -> 180
+// 0 -> 90
 // pan, tilt
 // state = 0, 1, 2
 
@@ -13,11 +13,11 @@ function createLaserProjectorPopup() {
 			<div class="choices row">
 				<div class="item">
 					<div class="label">Pan <span>0</span></div>
-					<div class="input"><input type="range" min="0" max="180" value="0" class="slider" id="pan"></div>
+					<div class="input"><input type="range" min="0" max="90" value="0" class="slider" id="pan"></div>
 				</div>
 				<div class="item">
 					<div class="label">Tilt <span>0</span></div>
-					<div class="input"><input type="range" min="0" max="180" value="0" class="slider" id="tilt"></div>
+					<div class="input"><input type="range" min="0" max="90" value="0" class="slider" id="tilt"></div>
 				</div>
 				<div class="item">
 					<div class="label">State</div>

@@ -11,7 +11,8 @@ floatInput.deactivate = function () {
 
 	floatInput.elementParts[0].blur();
 	if (floatInput.elementParts[0].value === "") floatInput.elementParts[0].value = 0;
-	const value = Math.min(100, Math.max(0, parseInt(floatInput.elementParts[0].value)));
+	const value = Math.min(101, Math.max(0, parseInt(floatInput.elementParts[0].value)));
+	console.log(value);
 
 	// Create / Update the event here
 	window.timeline.addEvent(value);
